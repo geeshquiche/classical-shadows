@@ -1,0 +1,6 @@
+# budget allocation under final matched-count estimator; 500 times, budget 500/time as 1x500 vs 5x100 (averaged); 20 seeds; exact matched-count sampling; wall=2536s
+observable,noise,rmse_1x500,se_1x500,rmse_5x100,se_5x100,gap_pct,gap_se_pct
+XI,empirical,0.01541,0.00053,0.02516,0.00053,63.28,4.73
+XI,fitted,0.01485,0.00056,0.01307,0.00052,-12.0,4.29
+ZZ,empirical,0.02748,0.00093,0.04847,0.00096,76.37,5.47
+ZZ,fitted,0.02178,0.00068,0.01937,0.00074,-11.07,4.72

@@ -1,0 +1,10 @@
+# 8-Hamiltonian sweep, GP arm recomputed under final method (matched-count, empirical noise, Matern-3/2), paired vs stored conditional arm (identical data per cell via make_cell_seed); <XI>, 100x200; wall=652s
+hamiltonian,n_seeds,gp_mean,gp_se,cond_mean,cond_se,paired_diff,paired_se,gp_wins
+ZZ_slow,5,0.03143,0.00315,0.154,0.03223,-0.12258,0.03054,5
+ZZ_fast,5,0.04863,0.00228,0.27947,0.02657,-0.23084,0.02492,5
+ZZ_plus_XI,5,0.04128,0.00273,0.11704,0.01043,-0.07576,0.00862,5
+weak,15,0.01782,0.00127,0.06673,0.00875,-0.0489,0.00836,15
+entangling,5,0.03612,0.00328,0.14331,0.01511,-0.10719,0.0124,5
+TFIM,5,0.03853,0.00206,0.16331,0.0039,-0.12479,0.00519,5
+beating,5,0.03744,0.00293,0.14038,0.01044,-0.10294,0.00892,5
+dephasing,5,0.03394,0.00224,0.10739,0.00491,-0.07345,0.00534,5

@@ -1,0 +1,8 @@
+# coverage basis-protocol ablation; matrix-GP route, 20 times x 60 shadows, kernel=matern32, 20 seeds 10..29, paired at seed level; wall=172s
+observable,metric,fixed_mean,fixed_se,rerand_mean,rerand_se,paired_diff,paired_diff_se
+XI,coverage_shot_only,0.7742,0.0382,0.6892,0.0309,-0.085,0.0362
+XI,coverage_fit_inclusive,0.7833,0.0393,0.705,0.0308,-0.0783,0.0341
+XI,rmse,0.2925,0.0201,0.3242,0.016,0.0316,0.0176
+ZZ,coverage_shot_only,0.8908,0.0346,0.9858,0.006,0.095,0.035
+ZZ,coverage_fit_inclusive,0.8917,0.0347,0.9867,0.0059,0.095,0.0354
+ZZ,rmse,0.3956,0.0165,0.357,0.0024,-0.0385,0.0168

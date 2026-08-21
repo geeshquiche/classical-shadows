@@ -1,0 +1,6 @@
+# XI fix probe + mechanism check; fixed-basis protocol, 20x60, Matern-3/2 sklearn, 20 seeds 10..29; empnoise=per-point alpha=se^2, fitnoise=WhiteKernel control; wall=55s
+observable,arm,coverage_mean,coverage_se,rmse_mean,rmse_se
+XI,empnoise,0.98,0.02,0.1761,0.0137
+XI,fitnoise,0.9758,0.0142,0.1875,0.014
+ZZ,empnoise,0.9183,0.0325,0.3507,0.0208
+ZZ,fitnoise,0.9783,0.0127,0.3191,0.02

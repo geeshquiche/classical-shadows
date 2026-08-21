@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\title{Seeding, Reproducibility and Implementation Notes\\
+\large Companion document to the MRes report ``Learning the Quantum Dynamics of Classical Shadows''
+(MLBD\_2025\_10)}
+\author{Vageesh Singh \\ Imperial College London}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\noindent This document records the code-facing methodology behind the report's results: how randomness
+is assigned, the pitfalls that assignment avoids, the audits applied to the estimation pipeline, and the
+implementation details of the final estimator. It accompanies the code in this repository; the report
+itself carries the scientific results and the theory.
+
+\section{Seeding as experimental design}
+The report's comparisons rest on error bars computed across random seeds, so how randomness is assigned
+across conditions is itself a design decision. Three natural implementations bias the error bars even
+when each individual run is correct.
+
+\paragraph{Nested budget draws.} To study how accuracy depends on the number of shadows, one sweeps the
+shadow count $N_1<N_2<\dots<N_{\max}$. A tempting implementation draws a single stream of $N_{\max}$
+snapshots once and reads its first $N_i$ as the estimate at budget $N_i$. The estimates are then nested:
+the dataset at $N_1$ is a subset of that at $N_2$, so their errors are positively correlated and much of
+the fluctuation that should distinguish the budgets is common to all of them. An error bar computed
+across such nested draws measures the variation of a shared prefix, not the independent variability of
+each budget, and is systematically too small. In the audit that motivated this design, nested prefixes
+understated the standard error of a budget difference by roughly a quarter (0.0038 against 0.0050),
+inflating an apparent significance from $16.5\sigma$ to $20.3\sigma$. Every budget point in every seed
+therefore draws an independent dataset.
+
+\paragraph{Globally seeded inference library.} Setting the seed of the tensor library once, at the start
+of a run, ties every subsequent draw, including the initialisation of each Gaussian-process fit, to the
+order in which the models happen to execute. Re-ordering the sweep, or inserting an extra condition,
+then silently changes every result downstream. The random state of the inference library is therefore
+reset per experimental cell, from that cell's own seed, so each configuration is reproducible in
+isolation and independent of its neighbours.
+
+\paragraph{Additive per-condition seeds.} Forming a per-cell seed by adding small offsets to a base seed
+(base $+$ condition index $+$ repeat index) lets distinct cells land on the same value, secretly
+correlating conditions that should be independent: for example
+$\mathrm{base}+100000\times\mathrm{repeat}+1000\times\mathrm{budget}$ collides whenever distinct settings
+of its terms sum equally.
+
+\section{The cell-hash scheme}
+Each cell of every sweep is described by the tuple (base seed, observable, shadow budget, number of
+observed times, repeat index). The tuple is passed through numpy's \texttt{SeedSequence} to produce a
+well-mixed 32-bit seed unique to the cell (\texttt{make\_cell\_seed} in
+\texttt{Synthetic\_Error\_Uncertainty\_Check.py}). No two cells share a seed; every cell is reproducible
+in isolation; both numpy's and torch's random states are set from the cell seed.
+
+\section{Audits}
+Two audits complement the scheme. A \emph{randomness audit} traced every random draw in the codebase to
+verify that the datasets behind each reported error bar are independent across seeds, that resampled
+datasets used for uncertainty bands are independent draws rather than reuses, and that no comparison
+mixes nested with independent sampling. A \emph{leakage audit} traced every use of the exactly simulated
+dynamics and confirmed the true state enters in exactly two roles: as the simulator from which
+measurement outcomes are sampled, and in the final error computation. In particular the empirical noise
+variance used by the fixed-noise reconstructions is computed from the scatter of the measured snapshots
+alone; the analytic variance expression is never evaluated inside the estimation path, since it would
+require the unknown expectation value it is being used to estimate.
+
+\section{Estimator implementation notes}
+\paragraph{Matched-count normalisation.} Per-time Pauli-string estimates divide by the realised number
+of basis-aligned snapshots rather than its expectation $N/3^k$; under a fixed-basis protocol the
+expectation-normalised estimator is scaled by the frozen alignment count for the whole trajectory, a
+bias no smoother can remove.
+
+\paragraph{Smoothed variance for small counts.} With few aligned snapshots the raw sample variance of
+the binary outcome products is frequently zero, which would tell the regression those points are
+noise-free. A Laplace-smoothed binomial estimate,
+$\widehat{\mathrm{se}}^2 = 4p_s(1-p_s)/m$ with $p_s=(n_+ + 1)/(m+2)$,
+keeps the noise input well defined. (Passing a raw zero variance produced coverage failures of exactly
+the kind the report's calibration audit is designed to catch.)
+
+\paragraph{Exact pattern-count sampling.} For simulation studies the per-snapshot measurement loop is
+replaced by exact multinomials: pattern counts over the $3^n$ basis patterns, then outcome counts from
+the Born distribution within each pattern. This is statistically identical to per-snapshot simulation
+for every estimator used, and orders of magnitude faster. One implementation pitfall is recorded for
+posterity: outcome-bit ordering must match the tensor (kron) convention, with qubit~0 as the highest
+bit; the little-endian variant silently contaminates every single-qubit Pauli estimate with one third of
+the wrong-basis mean, and was caught by a large-$N$ input-validation gate ($\rho_{00}=0.4167=(1 + 1/3 +
+1/3)/4$ at a state with $\rho_{00}=1/4$).
+
+\paragraph{Validation gates.} New estimator code is validated at large $N$ against the exact state
+(inputs must approach truth within the noise floor) before entering any study; scripts carry a
+\texttt{QUICK=1} smoke mode and stamp their configuration, seeds and wall time into their output CSVs.
+
+\section{Repository map}
+\begin{itemize}
+  \item Root: measurement simulation, shadow construction, cell-hash seeding
+    (\texttt{Synthetic\_Error\_Uncertainty\_Check.py}), classifier-route machinery
+    (\texttt{Bayesian\_part.py}, \texttt{quantum\_part.py}), shadow-matrix utilities.
+  \item \texttt{rho\_reconstruction/}: joint shadow matrices and the conditional (autoregressive) route.
+  \item \texttt{review\_ablations/}: the final-method studies reported in the MRes report: route
+    comparisons (\texttt{routes3\_final.py}), sensitivity ladder
+    (\texttt{final\_config\_coverage.py}), headline reconstruction
+    (\texttt{final\_headline\_recon.py}), the $\rho(t)$ program (\texttt{rho\_final\_program.py},
+    \texttt{partial\_final.py}), budget allocation (\texttt{budget\_final.py}), the Hamiltonian sweep
+    recompute (\texttt{ham\_gp\_recompute.py}), and the diagnostic studies (coverage ablations,
+    median-of-means, classical-smoother baselines). Summary CSVs of each study's results sit alongside
+    the scripts.
+\end{itemize}
+
+\end{document}

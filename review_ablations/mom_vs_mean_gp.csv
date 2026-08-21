@@ -1,0 +1,10 @@
+# MoM vs mean, downstream scalar GP (matern32); 2q TFIM, 20 times; 20 seeds; paired on identical snapshots; wall=379s
+observable,N,estimator,gp_rmse_mean,gp_rmse_se,paired_diff_vs_mean,paired_diff_se
+XI,60,mean,0.323,0.0165,0.0,0.0
+XI,60,mom5,0.3446,0.008,0.0217,0.0189
+XI,100,mean,0.2305,0.0253,0.0,0.0
+XI,100,mom5,0.3117,0.0195,0.0811,0.028
+ZZ,60,mean,0.3499,0.0063,0.0,0.0
+ZZ,60,mom5,0.3698,0.0085,0.0199,0.0096
+ZZ,100,mean,0.3461,0.0069,0.0,0.0
+ZZ,100,mom5,0.3608,0.0033,0.0146,0.008

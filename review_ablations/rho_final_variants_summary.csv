@@ -1,0 +1,9 @@
+# per-element rho program, matched-Pauli assembled estimator, fresh bases; MODE=variants; 500 times, N=[500], qubits=[2], 20 seeds, RBF, arms=['shared', 'per-elem', 'grouped', 'bounded', 'restart', 'grid', 'empnoise']; pattern-count sampler; wall=7781s
+qubits,N,arm,frob_mean,frob_se,pct_vs_shared,paired_diff_se_pct
+2,500,bounded,0.03272,0.00048,-1.83,0.69
+2,500,empnoise,0.03032,0.00041,-9.06,0.98
+2,500,grid,0.0373,0.00072,11.89,1.91
+2,500,grouped,0.03367,0.00038,1.01,0.11
+2,500,per-elem,0.03774,0.00045,13.2,1.11
+2,500,restart,0.03641,0.00071,9.21,1.75
+2,500,shared,0.03334,0.00038,0.0,0.0
