@@ -203,48 +203,4 @@ for ax in axes[:, 0]:
 fig.tight_layout()
 save(fig, "hamiltonian_dynamics")
 
-# ---- kernel comparison: bars from CSV + seed-10 curves recomputed ----
-rows = load(SP + "kernel_comparison_summary.csv")
-import sys
-sys.path.append(_ROOT)
-from Synthetic_Error_Uncertainty_Check import (build_hamiltonian, build_initial_state,
-                                               generate_measurement_df, pauli_string_operator,
-                                               make_cell_seed)
-from classical_shadow_matrix import construct_classical_shadow_matrices_by_time
-from bayesian_matrix_inference_botorch import infer_observable_from_shadow_with_botorch
-tlist = np.linspace(0, 2 * np.pi, 400)
-states = qt.mesolve(build_hamiltonian("tfim", 2), build_initial_state(2), tlist, []).states
-op = pauli_string_operator("ZZ", 2)
-pt = np.linspace(0, 2 * np.pi, 100)
-truth = np.interp(pt, tlist, np.real(np.asarray(qt.expect(op, states))))
-oi = np.linspace(0, 399, 100, dtype=int)
-mdf = generate_measurement_df(states, tlist, oi, 2, 200, seed=make_cell_seed(10, "ZZ", 200, 100, 0))
-_, mt, mats = construct_classical_shadow_matrices_by_time(mdf, 2)
-curves = {}
-for k in ("rbf", "matern32"):
-    r = infer_observable_from_shadow_with_botorch(observations=mats, operator=op, time_index=mt,
-                                                  target_time_index=pt, kernel=k, credible_mass=0.95)
-    curves[k] = np.real(np.asarray(r["posterior_mean"], dtype=complex))
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(12.5, 4.4))
-x = np.arange(2); w = 0.36
-cols = {"rbf": "#5dade2", "matern32": "#e59866"}
-for i, k in enumerate(("rbf", "matern32")):
-    m, se = [], []
-    for o in ("XI", "ZZ"):
-        v = np.array([float(r["rmse"]) for r in rows if r["observable"] == o and r["kernel"] == k])
-        m.append(v.mean()); se.append(v.std(ddof=1) / np.sqrt(len(v)))
-    a1.bar(x + (i - 0.5) * w, m, w, yerr=se, capsize=3, color=cols[k], edgecolor="k", lw=.5, label=k)
-a1.set_xticks(x)
-a1.set_xticklabels([r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"])
-a1.set_ylabel("reconstruction RMSE")
-a1.legend()
-a1.grid(axis="y", alpha=.25)
-for k in ("rbf", "matern32"):
-    a2.plot(pt, curves[k], lw=1.6, color=cols[k], label=k)
-a2.plot(pt, truth, "k--", lw=1.4, label="truth")
-a2.set_xlabel("time")
-a2.legend(fontsize=8)
-a2.grid(alpha=.25)
-fig.tight_layout()
-save(fig, "kernel_comparison")
 print("[csvfigs] all done")
