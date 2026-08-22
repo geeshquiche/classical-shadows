@@ -21,7 +21,9 @@ import matplotlib.pyplot as plt
 import qutip as qt
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
-SP = "/private/tmp/claude-501/-Users-vzs-MLBD/6ff4ff12-f3ce-46f8-a65b-5e2fc95a74f1/scratchpad"
+import os as _os
+SP = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "out")  # repo-relative output dir
+_os.makedirs(SP, exist_ok=True)
 
 SEEDS = list(range(10, 201, 10))          # 20 seeds
 BUDGETS = [50, 100, 200, 400, 800]        # shadows per observed time

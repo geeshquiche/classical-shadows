@@ -25,7 +25,9 @@ sys.path.append(_PARENT)
 sys.path.append(os.path.join(_PARENT, "rho_reconstruction"))
 import conditional_rho as cr
 
-SP = "/private/tmp/claude-501/-Users-vzs-MLBD/6ff4ff12-f3ce-46f8-a65b-5e2fc95a74f1/scratchpad"
+import os as _os
+SP = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "out")  # repo-relative output dir
+_os.makedirs(SP, exist_ok=True)
 SEED, N_TRUE, N_OBS, SHADOW = 10, 300, 80, 300
 LS_GRID = np.geomspace(0.05, 1.2, 12)
 

@@ -40,7 +40,9 @@ from Synthetic_Error_Uncertainty_Check import (
 from classical_shadow_matrix import construct_classical_shadow_matrices_by_time
 from bayesian_matrix_inference_botorch import infer_observable_from_shadow_with_botorch
 
-SP = "/private/tmp/claude-501/-Users-vzs-MLBD/6ff4ff12-f3ce-46f8-a65b-5e2fc95a74f1/scratchpad"
+import os as _os
+SP = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "out")  # repo-relative output dir
+_os.makedirs(SP, exist_ok=True)
 QUICK = os.environ.get("QUICK", "0") == "1"
 OBS = "XI"
 QUBIT_NUM = 2
