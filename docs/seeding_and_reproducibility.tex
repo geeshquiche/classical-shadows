@@ -94,13 +94,54 @@ the wrong-basis mean, and was caught by a large-$N$ input-validation gate ($\rho
 (inputs must approach truth within the noise floor) before entering any study; scripts carry a
 \texttt{QUICK=1} smoke mode and stamp their configuration, seeds and wall time into their output CSVs.
 
+
+\section{Experimental design considerations}
+These design considerations are summarised in one paragraph of the report (its Section~4); the full
+rationale is recorded here.
+
+\paragraph{Budget-matched comparison.} Every comparison between routes or strategies is made at a fixed
+measurement budget: the total number of single-shot snapshots is held constant, so a method using more
+times uses proportionally fewer shots per time. Comparing at equal budget is what makes ``breadth versus
+depth'' a fair question rather than a foregone one. Each configuration is run over many independent random
+seeds, and differences are reported with a $2\times$ standard-error interval on the paired difference; a
+gap smaller than that is not claimed as an effect. This guards against reading structure into seed-to-seed
+scatter, the commonest way a favourable single run misleads.
+
+\paragraph{Inputs to the regression.} Two choices concern what the regression is given. First, per-time
+Pauli-string estimates are normalised by the realised number of basis-aligned snapshots rather than by
+its expectation. The naive alternative leaves every estimate scaled by the alignment count's fluctuation;
+under a fixed-basis protocol that fluctuation is frozen and shared by the entire trajectory, where no
+smoother can remove it, since an error common to all points is indistinguishable from signal. Second, the
+observation-noise variance supplied to the regression is the measured scatter of the snapshots, not a
+fitted hyperparameter: fitting it by marginal likelihood systematically under-estimates the noise at the
+dataset sizes used (central ratio $0.68$ of the analytic value over twenty seeds), which both narrows the
+uncertainty bands and lets the posterior mean chase shot noise. When few snapshots align, the raw sample
+variance of the binary outcome products is frequently zero, which would tell the regression those points
+are noise-free, so the Laplace-smoothed variance estimate of Section~4 keeps the noise input well defined.
+
+\paragraph{The smoothness prior.} A Gaussian-process prior that is too strong flattens real structure: a
+lengthscale chosen too long averages across a genuine oscillation and shrinks its amplitude, reporting a
+confident but attenuated curve. This is the characteristic failure of the regression routes and a real
+risk for the fast coherences of $\rho(t)$. It is controlled by the marginal-likelihood fit of the
+lengthscale: an over-long lengthscale that misses an oscillation is penalised by the data it fails to
+explain. Where the sampling in time is too coarse to resolve a coherence at all, no choice of lengthscale
+can recover it (a Nyquist limit), but within the resolved band the fitted prior neither over- nor
+under-smooths by construction.
+
+\paragraph{Software and regeneration.} All results come from scripted sweeps that record their seeds,
+budgets and hyperparameter settings in their output CSVs, so each figure can be regenerated exactly: the
+study scripts in \texttt{studies/} and \texttt{estimator\_comparison/} produce the CSVs, and the scripts in
+\texttt{figures/} turn them into the report's figures. Quantum dynamics are simulated with QuTiP; the
+Gaussian-process routes use GPyTorch and BoTorch (fitted-noise comparisons) and scikit-learn (final
+method and per-element studies).
+
 \section{Repository map}
 \begin{itemize}
   \item Root: measurement simulation, shadow construction, cell-hash seeding
     (\texttt{Synthetic\_Error\_Uncertainty\_Check.py}), classifier-route machinery
     (\texttt{Bayesian\_part.py}, \texttt{quantum\_part.py}), shadow-matrix utilities.
   \item \texttt{rho\_reconstruction/}: joint shadow matrices and the conditional (autoregressive) route.
-  \item \texttt{review\_ablations/}: the final-method studies reported in the MRes report: route
+  \item \texttt{studies/}: the final-method studies reported in the MRes report: route
     comparisons (\texttt{routes3\_final.py}), sensitivity ladder
     (\texttt{final\_config\_coverage.py}), headline reconstruction
     (\texttt{final\_headline\_recon.py}), the $\rho(t)$ program (\texttt{rho\_final\_program.py},

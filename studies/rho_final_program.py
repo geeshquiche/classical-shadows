@@ -43,7 +43,7 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PARENT = os.path.dirname(_HERE)
-_FF = os.path.join(_PARENT, "for_fred_latest")
+_FF = os.path.join(_PARENT, "per_element_rho")
 for _p in (_PARENT, _FF):
     if _p not in sys.path:
         sys.path.append(_p)
@@ -203,7 +203,7 @@ def fit_shared_empnoise(to, tn, ch, n):
 
 
 def _variants_fitters():
-    """Variant-ladder arms, mirroring for_fred_latest/mll_per_element_variants.py definitions."""
+    """Variant-ladder arms, mirroring per_element_rho/mll_per_element_variants.py definitions."""
     sys.path.append(_FF)
     from mll_per_element_variants import (fit_per_element as v_pe, fit_per_element_grid,
                                           fit_grouped)
