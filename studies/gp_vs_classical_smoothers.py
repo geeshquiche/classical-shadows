@@ -15,7 +15,7 @@ protocol, seeds 10..80, matern32), the following curve estimators:
 
 Data generation and seeding replicate estimator_comparison/compare_estimators.py cell-for-cell
 (make_cell_seed, torch seeded per cell), so raw and gp_matern double as a replication check of
-the published Table 1 numbers (raw 0.092/0.170, matrix-GP 0.056/0.202 for XI/ZZ).
+the route-comparison cells.
 
 Only the GP provides a predictive band; the classical smoothers are point estimators.  The
 comparison is therefore about the accuracy margin, with calibration a separate axis.

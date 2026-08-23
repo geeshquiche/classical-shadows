@@ -15,7 +15,7 @@ OUT = _OUT
 
 
 def fig_empnoise():
-    # matched-Pauli program, review_ablations/rho_final_variants_summary.csv (20 seeds, 2026-08-21)
+    # studies/rho_final_variants_summary.csv (20 seeds)
     names = ["per-elem\n(empnoise)", "per-elem\nbound", "shared", "grouped",
              "per-elem\nrestart", "per-elem\ngrid", "per-elem\n(fully fitted)"]
     rmse = [0.0303, 0.0327, 0.0333, 0.0337, 0.0364, 0.0373, 0.0377]

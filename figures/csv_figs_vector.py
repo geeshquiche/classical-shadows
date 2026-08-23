@@ -55,7 +55,7 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "coverage_bar")
 
-# ---- route robustness (routes3_final MODE=robustness, 15 seeds, 2026-08-21) ----
+# ---- route robustness (routes3_final MODE=robustness, 15 seeds) ----
 RA3 = _STUDIES
 rows = load(RA3 + "routes3_robustness.csv")
 fig, ax = plt.subplots(figsize=(6.8, 4.2))
@@ -78,7 +78,7 @@ ax.legend(fontsize=8)
 fig.tight_layout()
 save(fig, "route_robustness")
 
-# ---- n-qubit scaling (matched-Pauli program, 2026-08-21) ----
+# ---- n-qubit scaling (rho_final_program MODE=nqubit) ----
 RA = _STUDIES
 rows = load(RA + "rho_final_nqubit_summary.csv")
 by = {(r["qubits"], r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
@@ -97,7 +97,7 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "nqubit_scaling")
 
-# ---- 2x2 de-confound (matched-Pauli program core, 20 seeds, 2026-08-21) ----
+# ---- 2x2 de-confound (rho_final_program MODE=core, 20 seeds) ----
 rows = load(RA + "rho_final_core_summary.csv")
 by = {r["arm"]: (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
 order = ["shared", "per-elem", "shared-empnoise", "empnoise"]
@@ -114,7 +114,7 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "twobytwo")
 
-# ---- budget comparison (matched-count estimator rerun, 2026-08-21) ----
+# ---- budget comparison (budget_final, 20 seeds) ----
 rows = load(RA + "budget_final_summary.csv")
 fig, axes = plt.subplots(1, 2, figsize=(9.6, 4.0))
 for ax, obs, tt in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"]):
@@ -134,7 +134,7 @@ axes[0].legend(fontsize=8)
 fig.tight_layout()
 save(fig, "budget_comparison")
 
-# ---- shot scaling (matched-Pauli program, 10 seeds, 2026-08-21) ----
+# ---- shot scaling (rho_final_program MODE=shots, 10 seeds) ----
 rows = load(RA + "rho_final_shots_summary.csv")
 N = np.array(sorted({float(r["N"]) for r in rows}))
 by = {(float(r["N"]), r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}

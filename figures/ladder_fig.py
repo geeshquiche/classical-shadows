@@ -6,7 +6,7 @@ _EST = _os.path.join(_ROOT, "estimator_comparison") + "/"
 _STUDIES = _os.path.join(_ROOT, "studies") + "/"
 _os.makedirs(_OUT, exist_ok=True)
 """Sensitivity ladder figure: ZZ coverage + RMSE vs sampling density, 4 arms, empirical noise.
-Data: review_ablations/final_config_coverage_{tag}_summary.csv (16-arm grid, 20 seeds each)."""
+Data: studies/final_config_coverage_{tag}_summary.csv (16-arm grid, 20 seeds each)."""
 import csv
 import numpy as np
 import matplotlib

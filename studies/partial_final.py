@@ -123,7 +123,7 @@ def main():
               f"full={per_seed[('magnitude', 10)][seed]:.4f}", flush=True)
 
     ns = len(SEEDS)
-    print("\n==== SUMMARY (old-pipeline refs: raw ~0.35, full ~0.22, ~linear gain) ====",
+    print("\n==== SUMMARY ====",
           flush=True)
     sum_rows = []
     for ordering in ORDERINGS:

@@ -16,7 +16,7 @@ Reports empirical 95% coverage (shot-only and fit-inclusive) and GP-mean RMSE pe
 per-seed paired difference (rerandomised - fixed) with its SE.
 
 Note: torch is seeded per (protocol-independent) cell so both arms share GP-init randomness;
-the fixed arm is therefore a fresh replication of the published run, not a byte-identical rerun.
+the fixed arm is therefore an independent replication of the fixed-basis analysis.
 
 Run:  python coverage_basis_ablation.py          (full: 20 seeds, ~2x the original run)
       QUICK=1 python coverage_basis_ablation.py  (2 seeds smoke)

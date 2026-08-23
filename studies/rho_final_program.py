@@ -15,7 +15,7 @@ Arms (2x2 de-confound): {noise: fitted, fixed-empirical} x {lengthscale: shared,
 RBF kernel, mirroring the house mll pipeline (fits imported from mll_shot_scaling).
 
 Errors: mean Frobenius distance to exact rho(t), absolute AND relative to the truth's mean
-Frobenius norm (consistent-fractions convention, 2026-08-21).
+Frobenius norm.
 
 Modes (env MODE):
   core   (default): 2q TFIM full rho, 500 times x 500 shadows, 20 seeds, all 4 arms
@@ -127,8 +127,7 @@ def outcome_signs(n_qubits):
     """signs[outcome_index, qubit] = +/-1.
 
     Kron ordering is big-endian: qubit 0 is the FIRST tensor factor, i.e. the HIGHEST bit of
-    the outcome index. (A little-endian version silently reads the wrong qubit's outcome and
-    contaminates every single-qubit Pauli estimate with 1/3 of the wrong-basis mean.)"""
+    the outcome index."""
     idx = np.arange(2 ** n_qubits)
     return np.array([1 - 2 * ((idx >> (n_qubits - 1 - q)) & 1) for q in range(n_qubits)]).T
 
@@ -264,8 +263,7 @@ def main():
                       flush=True)
 
     ns = len(SEEDS)
-    print("\n==== SUMMARY (rel_frob = Frobenius / mean ||rho_true||_F; published old-pipeline "
-          "core refs: shared .0366, per-elem .0399, empnoise .0331) ====", flush=True)
+    print("\n==== SUMMARY (rel_frob = Frobenius / mean ||rho_true||_F) ====", flush=True)
     sum_rows = []
     for (nq, N, arm), d in sorted(per_seed.items()):
         arr = np.array([d[s] for s in SEEDS])

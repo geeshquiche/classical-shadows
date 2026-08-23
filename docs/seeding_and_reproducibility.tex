@@ -17,7 +17,7 @@
 \maketitle
 
 \noindent This document records the code-facing methodology behind the report's results: how randomness
-is assigned, the pitfalls that assignment avoids, the audits applied to the estimation pipeline, and the
+is assigned, the design choices it reflects, the audits applied to the estimation pipeline, and the
 implementation details of the final estimator. It accompanies the code in this repository; the report
 itself carries the scientific results and the theory.
 
@@ -78,17 +78,14 @@ bias no smoother can remove.
 the binary outcome products is frequently zero, which would tell the regression those points are
 noise-free. A Laplace-smoothed binomial estimate,
 $\widehat{\mathrm{se}}^2 = 4p_s(1-p_s)/m$ with $p_s=(n_+ + 1)/(m+2)$,
-keeps the noise input well defined. (Passing a raw zero variance produced coverage failures of exactly
-the kind the report's calibration audit is designed to catch.)
+keeps the noise input well defined.
 
 \paragraph{Exact pattern-count sampling.} For simulation studies the per-snapshot measurement loop is
 replaced by exact multinomials: pattern counts over the $3^n$ basis patterns, then outcome counts from
 the Born distribution within each pattern. This is statistically identical to per-snapshot simulation
-for every estimator used, and orders of magnitude faster. One implementation pitfall is recorded for
-posterity: outcome-bit ordering must match the tensor (kron) convention, with qubit~0 as the highest
-bit; the little-endian variant silently contaminates every single-qubit Pauli estimate with one third of
-the wrong-basis mean, and was caught by a large-$N$ input-validation gate ($\rho_{00}=0.4167=(1 + 1/3 +
-1/3)/4$ at a state with $\rho_{00}=1/4$).
+for every estimator used, and orders of magnitude faster. Outcome-bit ordering follows the tensor
+(kron) convention, with qubit~0 as the highest bit, and is checked by the large-$N$ validation gate
+below.
 
 \paragraph{Validation gates.} New estimator code is validated at large $N$ against the exact state
 (inputs must approach truth within the noise floor) before entering any study; scripts carry a

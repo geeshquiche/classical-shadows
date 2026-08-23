@@ -87,8 +87,7 @@ def main():
         print(f"  seed {seed} done ({_time.perf_counter()-t0:.0f}s)", flush=True)
 
     ns = len(SEEDS)
-    print("\n==== SUMMARY (old-pipeline reference at this config: raw 0.092/0.170, "
-          "GP 0.056/0.202) ====", flush=True)
+    print("\n==== SUMMARY ====", flush=True)
     sum_rows = []
     for name in SUPPORTS:
         arr = np.array([per_seed[name][s] for s in SEEDS])

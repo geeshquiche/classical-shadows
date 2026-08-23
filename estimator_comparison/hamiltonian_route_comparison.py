@@ -62,7 +62,7 @@ IZ_ = qt.tensor(qt.qeye(2), qt.sigmaz())
 XX = qt.tensor(qt.sigmax(), qt.sigmax())
 YY = qt.tensor(qt.sigmay(), qt.sigmay())
 
-# (name, Hamiltonian, collapse operators) -- the June library, unchanged
+# (name, Hamiltonian, collapse operators) -- the Hamiltonian library
 HAMS = [
     ("ZZ_slow",    0.5 * ZZ,                                []),
     ("ZZ_fast",    2.5 * ZZ,                                []),

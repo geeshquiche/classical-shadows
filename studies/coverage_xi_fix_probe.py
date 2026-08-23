@@ -10,13 +10,13 @@
     coverage_basis_ablation.csv (fixed arm).  Prediction: strong for ZZ (E[m]=60/9, relative
     sd ~35%), weaker for XI (E[m]=20, relative sd ~18%).
 
-(2) XI FIX PROBE (empnoise bands): the published coverage bands come from a marginal-likelihood
+(2) NOISE-TREATMENT PROBE: the fitted-noise coverage bands come from a marginal-likelihood
     GP whose fitted noise under-shoots the shadow variance (measured ratio 0.64).  Here the GP
     observation noise is FIXED per point to the measured shot variance (sklearn alpha=se_t^2,
     Matern-3/2, only amplitude+lengthscale fitted) -- the empirical-noise treatment that wins in
     the per-element study -- against an otherwise-identical sklearn GP with FITTED WhiteKernel
     noise as the control.  Bands use the report's fit-inclusive construction
-    z*sqrt(posterior_var + se^2).  Question: does fixing the noise repair the local-observable
+    z*sqrt(posterior_var + se^2).  Question: does supplying the noise restore the local-observable
     undercoverage that basis re-randomisation did not?
 
 Run:  python coverage_xi_fix_probe.py          (full: 20 seeds, ~3 min)
@@ -135,8 +135,7 @@ def main():
         print(f"  seed {seed} done ({_time.perf_counter()-t0:.0f}s)", flush=True)
 
     ns = len(SEEDS)
-    print("\n==== PROBE SUMMARY (published fixed-arm baseline: XI cov 0.78 rmse 0.293 / "
-          "ZZ cov 0.89 rmse 0.396) ====", flush=True)
+    print("\n==== PROBE SUMMARY ====", flush=True)
     sum_rows = []
     for name in OPS:
         for arm in ARMS:
@@ -170,7 +169,7 @@ def main():
         print(line, flush=True)
 
     wall = _time.perf_counter() - t0
-    header = (f"# XI fix probe + mechanism check; fixed-basis protocol, {N_TIMES}x{SHADOWS}, "
+    header = (f"# noise-treatment probe + mechanism check; fixed-basis protocol, {N_TIMES}x{SHADOWS}, "
               f"Matern-3/2 sklearn, {ns} seeds {SEEDS[0]}..{SEEDS[-1]}; "
               f"empnoise=per-point alpha=se^2, fitnoise=WhiteKernel control; wall={wall:.0f}s")
     for fname, data in [("coverage_xi_fix_probe.csv", rows),

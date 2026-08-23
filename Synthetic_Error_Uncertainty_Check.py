@@ -64,7 +64,7 @@ class Config:
     num_inducing: int = 40
     gp_lr: float = 0.05
     use_matched_basis_estimator_for_pauli_strings: bool = False
-    independent_seeds: bool = True   # CHANGED 2026-08-16: safe default; False reinstates the B1 nested-seed bug
+    independent_seeds: bool = True   # independent draws per cell (False gives nested-prefix draws)
     inspect_shadow_size: int | None = None
     inspect_num_time_indices: int | None = None
     inspect_repeat_id: int = 0

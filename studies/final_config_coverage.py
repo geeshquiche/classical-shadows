@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""The repaired pipeline, all pieces together: which combination is the final method?
+"""Final-configuration grid: protocol x normalisation x noise treatment.
 
-Grid over the two identified repairs plus Vageesh's matched-count normalisation, everything
+Grid over basis protocol, estimator normalisation and noise treatment, everything
 scored on coverage AND RMSE, 20 paired seeds, XI and ZZ, empirical-noise GP throughout
-(sklearn Matern-3/2, per-point alpha = measured shot SE^2 -- the repaired noise treatment):
+(sklearn Matern-3/2, per-point alpha = measured shot SE^2 for the empirical treatment):
 
   protocol      : fixed        (bases drawn once, report default)
                   rerandomised (fresh bases per time)
@@ -11,7 +11,7 @@ scored on coverage AND RMSE, 20 paired seeds, XI and ZZ, empirical-noise GP thro
                   matched      (mean of outcome products over the snapshots that actually
                                 matched, i.e. divide by the realised count m -- Hajek estimator)
 
-Prediction: 'matched' should repair the correlator's frozen-scale bias WITHOUT changing the
+Matched-count normalisation removes the correlator's frozen-scale bias WITHOUT changing the
 protocol, because the bias exists only through the expected-rate normalisation; and
 rerandomised+either should also be calibrated.  The winner becomes the report's final
 configuration.  Guard: times with m=0 are dropped from the GP's training set.
@@ -49,7 +49,7 @@ from coverage_basis_ablation import generate_rerandomised_measurement_df
 
 QUICK = os.environ.get("QUICK", "0") == "1"
 TIME_MIN, TIME_MAX = 0.0, 2.0 * np.pi
-# Config env-overridable (2026-08-21 consolidation): NT/NS/NP, e.g. NT=100 NS=200 NP=100 for
+# Config env-overridable: NT/NS/NP, e.g. NT=100 NS=200 NP=100 for
 # the A-standard. Defaults preserve the original 20x60 run.
 TRUE_T = 400
 PRED_T = int(os.environ.get("NP", 60))

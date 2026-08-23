@@ -102,8 +102,7 @@ def main():
                 print(f"  {obs} seed {seed} done ({_time.perf_counter()-t0:.0f}s)", flush=True)
 
     ns = len(SEEDS)
-    print("\n==== SUMMARY (gap% = 100*(5x100 - 1x500)/1x500, paired; old-pipeline refs: "
-          "XI emp -3.6%ns / fitted -10.5%sig; ZZ emp +91.4%) ====", flush=True)
+    print("\n==== SUMMARY (gap% = 100*(5x100 - 1x500)/1x500, paired) ====", flush=True)
     sum_rows = []
     for obs in SUPPORT_K:
         for noise in NOISES:

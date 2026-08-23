@@ -6,7 +6,7 @@ GP route against the trajectory-averaged analytic shadow variance (3 - <X0>(t)^2
 configuration (XI, 2-qubit TFIM, 100 observed times x 200 shadows, RBF kernel), 8 independent seeds via
 make_cell_seed.
 
-Result (2026-08-18): ratio fitted/analytic mean 0.642, range [0.477, 0.845] over seeds 10..80.
+Reports the ratio fitted/analytic over the seed list (NSEED env selects the number of seeds).
 The fit UNDER-estimates the noise systematically (right order, low by ~1/3), consistent with the
 under-coverage of the bands and with the budget noise-fit artefact (budget_empnoise_test).
 """
@@ -26,7 +26,7 @@ from classical_shadow_matrix import construct_classical_shadow_matrices_by_time
 from bayesian_matrix_inference_botorch import bayesian_infer_matrix_over_time
 
 N_TRUE, N_OBS, SHADOW = 400, 100, 200
-# NSEED env override (2026-08-21): NSEED=20 -> seeds 10,20,...,200 (default 8 preserves original)
+# NSEED env override: NSEED=20 -> seeds 10,20,...,200
 SEEDS = list(range(10, 10 * int(os.environ.get("NSEED", "8")) + 1, 10))
 
 tl = np.linspace(0, 2 * np.pi, N_TRUE)
