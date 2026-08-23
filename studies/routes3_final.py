@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Three-route comparison under the consistent (matched-count) estimator, house seed counts.
 
-Routes:
+Routes :
   raw          : matched-count per-time estimates, linear interpolation
   gp           : final-method GP (matched-count series, smoothed SE, empirical noise, Matern-3/2)
-  conditional  : autoregressive classifier route, with its internal
+  conditional  : autoregressive classifier route with its internal
                  resampling estimator ALSO set to matched-basis normalisation for consistency
 
 Protocol: FIXED bases per shot index (the conditional route requires it; the matched-count
 normalisation makes raw/gp insensitive to the frozen draw). All routes see identical data per
 seed. Errors are reported absolute and RELATIVE to the true signal scale,
 rRMSE = RMSE / sqrt(mean(truth^2)), so fractions compare consistently across observables and
-studies.
+studies .
 
 Modes (env MODE):
   table       (default): 2q TFIM, 100x200, seeds 10..29 (20), XI + ZZ      -> Table 1
@@ -70,6 +70,9 @@ elif MODE == "fourq":
     SEEDS = [10] if QUICK else list(range(10, 20))
 else:
     raise SystemExit(f"unknown MODE={MODE}")
+if os.environ.get("OBS"):
+    OBSERVABLES = os.environ["OBS"].split(",")
+TAG = MODE + ("_" + "_".join(OBSERVABLES) if os.environ.get("OBS") else "")
 
 if QUICK:
     TRUE_T, PRED_T, N_TIMES = 200, 40, 30
@@ -199,14 +202,14 @@ def main():
               f"{N_TIMES} times, shadows={SHADOWS_LIST}, {ns} seeds {SEEDS[0]}..{SEEDS[-1]}, "
               f"fixed-basis protocol (conditional requirement), paired data per seed; "
               f"conditional internal estimator matched-basis; wall={wall:.0f}s")
-    for fname, data in [(f"routes3_{MODE}.csv", rows),
-                        (f"routes3_{MODE}_summary.csv", sum_rows)]:
+    for fname, data in [(f"routes3_{TAG}.csv", rows),
+                        (f"routes3_{TAG}_summary.csv", sum_rows)]:
         with open(os.path.join(_HERE, fname), "w", newline="") as f:
             w = csv.DictWriter(f, fieldnames=list(data[0].keys()))
             f.write(header + "\n")
             w.writeheader()
             w.writerows(data)
-    print(f"\nwall={wall:.0f}s -> saved routes3_{MODE}{{,_summary}}.csv", flush=True)
+    print(f"\nwall={wall:.0f}s -> saved routes3_{TAG}{{,_summary}}.csv", flush=True)
 
 
 if __name__ == "__main__":

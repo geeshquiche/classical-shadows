@@ -1,18 +1,18 @@
-# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 60x150, 20 seeds 10..29, paired; wall=1803s
+# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 60x150, 20 seeds 10..29, paired; wall=323s
 observable,protocol,normalisation,noise,coverage_mean,coverage_se,rmse_mean,rmse_se
-XI,fixed,expected,empirical,0.997,0.003,0.0834,0.0063
-XI,fixed,expected,fitted,1.0,0.0,0.0854,0.0061
-XI,fixed,matched,empirical,0.999,0.001,0.0533,0.0028
-XI,fixed,matched,fitted,1.0,0.0,0.0541,0.0024
-XI,rerandomised,expected,empirical,1.0,0.0,0.0639,0.0029
-XI,rerandomised,expected,fitted,1.0,0.0,0.0645,0.003
-XI,rerandomised,matched,empirical,0.9995,0.0005,0.0525,0.0025
-XI,rerandomised,matched,fitted,1.0,0.0,0.0555,0.0025
-ZZ,fixed,expected,empirical,0.9955,0.0045,0.1506,0.0134
-ZZ,fixed,expected,fitted,0.9985,0.0015,0.153,0.0135
-ZZ,fixed,matched,empirical,0.998,0.0014,0.0991,0.0064
-ZZ,fixed,matched,fitted,1.0,0.0,0.0957,0.005
-ZZ,rerandomised,expected,empirical,0.9995,0.0005,0.1124,0.0049
-ZZ,rerandomised,expected,fitted,1.0,0.0,0.1096,0.0052
-ZZ,rerandomised,matched,empirical,0.997,0.003,0.0979,0.0064
-ZZ,rerandomised,matched,fitted,1.0,0.0,0.0967,0.0057
+XI,fixed,expected,empirical,0.9895,0.0105,0.0815,0.0072
+XI,fixed,expected,fitted,1.0,0.0,0.0839,0.0071
+XI,fixed,matched,empirical,0.998,0.0012,0.0605,0.0031
+XI,fixed,matched,fitted,1.0,0.0,0.0606,0.0029
+XI,rerandomised,expected,empirical,0.9995,0.0005,0.0691,0.0032
+XI,rerandomised,expected,fitted,1.0,0.0,0.0689,0.0031
+XI,rerandomised,matched,empirical,0.9995,0.0005,0.0583,0.0029
+XI,rerandomised,matched,fitted,1.0,0.0,0.06,0.0031
+ZZ,fixed,expected,empirical,1.0,0.0,0.1286,0.0129
+ZZ,fixed,expected,fitted,1.0,0.0,0.1296,0.0133
+ZZ,fixed,matched,empirical,1.0,0.0,0.0848,0.0047
+ZZ,fixed,matched,fitted,1.0,0.0,0.0811,0.0045
+ZZ,rerandomised,expected,empirical,1.0,0.0,0.1146,0.0048
+ZZ,rerandomised,expected,fitted,1.0,0.0,0.1075,0.0053
+ZZ,rerandomised,matched,empirical,1.0,0.0,0.089,0.0052
+ZZ,rerandomised,matched,fitted,1.0,0.0,0.0849,0.0039

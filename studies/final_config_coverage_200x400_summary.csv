@@ -1,0 +1,18 @@
+# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 200x400, 20 seeds 10..29, paired; wall=2781s
+observable,protocol,normalisation,noise,coverage_mean,coverage_se,rmse_mean,rmse_se
+XI,fixed,expected,empirical,0.998,0.002,0.0357,0.0043
+XI,fixed,expected,fitted,1.0,0.0,0.0366,0.0043
+XI,fixed,matched,empirical,0.9995,0.0005,0.0225,0.0009
+XI,fixed,matched,fitted,1.0,0.0,0.0219,0.0009
+XI,rerandomised,expected,empirical,1.0,0.0,0.0246,0.001
+XI,rerandomised,expected,fitted,1.0,0.0,0.0247,0.001
+XI,rerandomised,matched,empirical,0.9995,0.0005,0.0229,0.0007
+XI,rerandomised,matched,fitted,1.0,0.0,0.0223,0.0008
+ZZ,fixed,expected,empirical,0.9875,0.0125,0.1,0.0107
+ZZ,fixed,expected,fitted,0.9985,0.0015,0.1006,0.0107
+ZZ,fixed,matched,empirical,1.0,0.0,0.0401,0.0017
+ZZ,fixed,matched,fitted,1.0,0.0,0.035,0.0015
+ZZ,rerandomised,expected,empirical,1.0,0.0,0.0469,0.002
+ZZ,rerandomised,expected,fitted,1.0,0.0,0.0451,0.002
+ZZ,rerandomised,matched,empirical,1.0,0.0,0.0401,0.002
+ZZ,rerandomised,matched,fitted,1.0,0.0,0.0373,0.0019

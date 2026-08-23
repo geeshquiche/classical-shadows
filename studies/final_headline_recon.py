@@ -38,6 +38,7 @@ import conditional_rho as cr
 from test_pipeline_coverage import exact_curve, OPS, Z95
 from coverage_basis_ablation import generate_rerandomised_measurement_df
 from final_config_coverage import per_time_series, gp_fit, SUPPORTS
+from Synthetic_Error_Uncertainty_Check import make_cell_seed
 
 QUICK = os.environ.get("QUICK", "0") == "1"
 TIME_MIN, TIME_MAX = 0.0, 2.0 * np.pi
@@ -61,8 +62,10 @@ def main():
 
     rows, per_seed = [], {}
     for seed in SEEDS:
+        cell = make_cell_seed(seed, "ZZ", SHADOWS, N_TIMES, 7)
+        np.random.seed(cell)
         mdf = generate_rerandomised_measurement_df(states, tlist, observed, 2, SHADOWS,
-                                                   shots_per_setting=1, seed=seed)
+                                                   shots_per_setting=1, seed=cell)
         for name in SUPPORTS:
             obs_times, series = per_time_series(mdf, SUPPORTS[name])
             y, se = series["matched"]

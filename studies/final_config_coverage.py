@@ -45,6 +45,7 @@ for _p in (_PARENT, _RHO, _CAL):
 
 import conditional_rho as cr
 from test_pipeline_coverage import exact_curve, OPS, Z95
+from Synthetic_Error_Uncertainty_Check import make_cell_seed
 from coverage_basis_ablation import generate_rerandomised_measurement_df
 
 QUICK = os.environ.get("QUICK", "0") == "1"
@@ -129,7 +130,9 @@ def main():
     rows, per_seed = [], {}
     for protocol, gen in PROTOCOLS.items():
         for seed in SEEDS:
-            mdf = gen(states, tlist, observed, 2, SHADOWS, shots_per_setting=1, seed=seed)
+            cell = make_cell_seed(seed, "ZZ", SHADOWS, N_TIMES, 0)   # protocol-independent: arms paired
+            np.random.seed(cell)
+            mdf = gen(states, tlist, observed, 2, SHADOWS, shots_per_setting=1, seed=cell)
             for name in SUPPORTS:
                 obs_times, series = per_time_series(mdf, SUPPORTS[name])
                 for norm in NORMALISATIONS:

@@ -1,18 +1,18 @@
-# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 100x200, 20 seeds 10..29, paired; wall=2680s
+# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 100x200, 20 seeds 10..29, paired; wall=708s
 observable,protocol,normalisation,noise,coverage_mean,coverage_se,rmse_mean,rmse_se
-XI,fixed,expected,empirical,0.999,0.0007,0.0663,0.0054
-XI,fixed,expected,fitted,1.0,0.0,0.0678,0.0051
-XI,fixed,matched,empirical,0.9995,0.0005,0.0413,0.0015
-XI,fixed,matched,fitted,1.0,0.0,0.0422,0.0014
-XI,rerandomised,expected,empirical,1.0,0.0,0.0486,0.0018
-XI,rerandomised,expected,fitted,1.0,0.0,0.049,0.0019
-XI,rerandomised,matched,empirical,0.9995,0.0005,0.0425,0.002
-XI,rerandomised,matched,fitted,1.0,0.0,0.043,0.0016
-ZZ,fixed,expected,empirical,0.9995,0.0005,0.1176,0.0085
-ZZ,fixed,expected,fitted,1.0,0.0,0.1189,0.0082
-ZZ,fixed,matched,empirical,1.0,0.0,0.0699,0.0043
-ZZ,fixed,matched,fitted,1.0,0.0,0.063,0.0032
-ZZ,rerandomised,expected,empirical,1.0,0.0,0.0832,0.0033
-ZZ,rerandomised,expected,fitted,1.0,0.0,0.0815,0.003
-ZZ,rerandomised,matched,empirical,0.9995,0.0005,0.0724,0.004
-ZZ,rerandomised,matched,fitted,1.0,0.0,0.0708,0.0029
+XI,fixed,expected,empirical,0.9895,0.01,0.0683,0.0085
+XI,fixed,expected,fitted,0.9935,0.0065,0.0697,0.0084
+XI,fixed,matched,empirical,0.999,0.0007,0.0382,0.0016
+XI,fixed,matched,fitted,1.0,0.0,0.037,0.0015
+XI,rerandomised,expected,empirical,1.0,0.0,0.0453,0.0017
+XI,rerandomised,expected,fitted,1.0,0.0,0.0455,0.0017
+XI,rerandomised,matched,empirical,0.999,0.0007,0.0381,0.0016
+XI,rerandomised,matched,fitted,1.0,0.0,0.0383,0.0015
+ZZ,fixed,expected,empirical,0.994,0.0041,0.1313,0.0146
+ZZ,fixed,expected,fitted,1.0,0.0,0.133,0.0145
+ZZ,fixed,matched,empirical,0.999,0.001,0.0716,0.0041
+ZZ,fixed,matched,fitted,1.0,0.0,0.0666,0.0033
+ZZ,rerandomised,expected,empirical,1.0,0.0,0.0779,0.0026
+ZZ,rerandomised,expected,fitted,1.0,0.0,0.0759,0.0029
+ZZ,rerandomised,matched,empirical,1.0,0.0,0.0672,0.0032
+ZZ,rerandomised,matched,fitted,1.0,0.0,0.063,0.0022

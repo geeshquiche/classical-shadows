@@ -1,18 +1,18 @@
-# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 20x60, 20 seeds 10..29, paired; wall=315s
+# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 20x60, 20 seeds 10..29, paired; wall=58s
 observable,protocol,normalisation,noise,coverage_mean,coverage_se,rmse_mean,rmse_se
-XI,fixed,expected,empirical,0.9785,0.0215,0.1761,0.0136
-XI,fixed,expected,fitted,0.9745,0.014,0.1876,0.0139
-XI,fixed,matched,empirical,0.9965,0.0026,0.1387,0.0088
-XI,fixed,matched,fitted,0.9935,0.0042,0.1549,0.0121
-XI,rerandomised,expected,empirical,0.9975,0.002,0.1477,0.0058
-XI,rerandomised,expected,fitted,0.993,0.0047,0.1714,0.0111
-XI,rerandomised,matched,empirical,0.9995,0.0005,0.1333,0.0062
-XI,rerandomised,matched,fitted,0.991,0.0042,0.1572,0.0116
-ZZ,fixed,expected,empirical,0.916,0.0333,0.351,0.021
-ZZ,fixed,expected,fitted,0.9805,0.0122,0.3159,0.0214
-ZZ,fixed,matched,empirical,0.9915,0.0041,0.2511,0.0193
-ZZ,fixed,matched,fitted,0.9945,0.0023,0.2741,0.0198
-ZZ,rerandomised,expected,empirical,0.9945,0.0037,0.287,0.0166
-ZZ,rerandomised,expected,fitted,0.996,0.0035,0.2915,0.0184
-ZZ,rerandomised,matched,empirical,0.996,0.0028,0.2239,0.019
-ZZ,rerandomised,matched,fitted,0.999,0.001,0.2693,0.0168
+XI,fixed,expected,empirical,0.998,0.0014,0.1587,0.008
+XI,fixed,expected,fitted,0.9955,0.0023,0.1689,0.0062
+XI,fixed,matched,empirical,0.9955,0.0033,0.1347,0.0074
+XI,fixed,matched,fitted,0.996,0.0024,0.1621,0.012
+XI,rerandomised,expected,empirical,0.999,0.001,0.1447,0.0072
+XI,rerandomised,expected,fitted,0.9875,0.0059,0.1856,0.0149
+XI,rerandomised,matched,empirical,0.995,0.0024,0.1327,0.0077
+XI,rerandomised,matched,fitted,0.992,0.0055,0.1568,0.012
+ZZ,fixed,expected,empirical,0.9495,0.029,0.2936,0.0229
+ZZ,fixed,expected,fitted,0.98,0.019,0.3222,0.0182
+ZZ,fixed,matched,empirical,0.9975,0.002,0.2338,0.0177
+ZZ,fixed,matched,fitted,0.9935,0.0037,0.2715,0.015
+ZZ,rerandomised,expected,empirical,0.9965,0.0024,0.2796,0.0176
+ZZ,rerandomised,expected,fitted,0.9875,0.008,0.287,0.0208
+ZZ,rerandomised,matched,empirical,0.9875,0.0052,0.2445,0.0176
+ZZ,rerandomised,matched,fitted,0.981,0.0067,0.2784,0.0169

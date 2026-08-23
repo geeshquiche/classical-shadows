@@ -55,30 +55,28 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "coverage_bar")
 
-# ---- route robustness (routes3_final MODE=robustness, 15 seeds) ----
+# ---- route robustness: two panels (XI from routes3_robustness_XI.csv, ZZ from routes3_robustness.csv) ----
 RA3 = _STUDIES
-rows = load(RA3 + "routes3_robustness.csv")
-fig, ax = plt.subplots(figsize=(6.8, 4.2))
 colors = {"raw": "#95a5a6", "gp": "#2471a3", "conditional": "#e59866"}
 labels = {"raw": "raw", "gp": "GP regression", "conditional": "conditional"}
-for rt in colors:
-    xs, ms, ses = [], [], []
-    for b in [40, 120, 240]:
-        v = [float(r["rmse"]) for r in rows
-             if r["observable"] == "ZZ" and r["route"] == rt and int(r["shadow"]) == b]
-        if v:
-            xs.append(b); ms.append(np.mean(v)); ses.append(np.std(v, ddof=1) / np.sqrt(len(v)))
-    ax.errorbar(xs, ms, yerr=ses, marker="o", ms=4.5, lw=1.7, capsize=3,
-                color=colors[rt], label=labels[rt])
-ax.set_xlabel("shadows per observed time (budget)")
-ax.set_ylabel(r"RMSE of $\langle Z_0Z_1\rangle$")
-ax.set_xticks([40, 120, 240])
-ax.grid(alpha=.25)
-ax.legend(fontsize=8)
+fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.2))
+for ax, (obs, fname, tt) in zip(axes, [("XI", "routes3_robustness_XI.csv", r"$\langle X_0\rangle$"),
+                                      ("ZZ", "routes3_robustness.csv", r"$\langle Z_0Z_1\rangle$")]):
+    rows = load(RA3 + fname)
+    for rt in colors:
+        xs, ms, ses = [], [], []
+        for b in [40, 120, 240]:
+            v = [float(r["rmse"]) for r in rows if r["observable"] == obs and r["route"] == rt and int(r["shadow"]) == b]
+            if v:
+                xs.append(b); ms.append(np.mean(v)); ses.append(np.std(v, ddof=1) / np.sqrt(len(v)))
+        ax.errorbar(xs, ms, yerr=ses, marker="o", ms=4.5, lw=1.7, capsize=3, color=colors[rt], label=labels[rt])
+    ax.set_xlabel("shadows per observed time (budget)"); ax.set_title(tt); ax.grid(alpha=.25)
+    ax.set_xticks([40, 120, 240])
+axes[0].set_ylabel("RMSE"); axes[0].legend(fontsize=9)
 fig.tight_layout()
 save(fig, "route_robustness")
 
-# ---- n-qubit scaling (rho_final_program MODE=nqubit) ----
+# ---- n-qubit scaling (matched-Pauli program) ----
 RA = _STUDIES
 rows = load(RA + "rho_final_nqubit_summary.csv")
 by = {(r["qubits"], r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
@@ -97,7 +95,7 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "nqubit_scaling")
 
-# ---- 2x2 de-confound (rho_final_program MODE=core, 20 seeds) ----
+# ---- 2x2 de-confound (matched-Pauli program core, 20 seeds) ----
 rows = load(RA + "rho_final_core_summary.csv")
 by = {r["arm"]: (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
 order = ["shared", "per-elem", "shared-empnoise", "empnoise"]
@@ -114,7 +112,7 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "twobytwo")
 
-# ---- budget comparison (budget_final, 20 seeds) ----
+# ---- budget comparison (matched-count estimator rerun) ----
 rows = load(RA + "budget_final_summary.csv")
 fig, axes = plt.subplots(1, 2, figsize=(9.6, 4.0))
 for ax, obs, tt in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"]):
@@ -134,7 +132,7 @@ axes[0].legend(fontsize=8)
 fig.tight_layout()
 save(fig, "budget_comparison")
 
-# ---- shot scaling (rho_final_program MODE=shots, 10 seeds) ----
+# ---- shot scaling (matched-Pauli program, 10 seeds) ----
 rows = load(RA + "rho_final_shots_summary.csv")
 N = np.array(sorted({float(r["N"]) for r in rows}))
 by = {(float(r["N"]), r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
@@ -203,4 +201,48 @@ for ax in axes[:, 0]:
 fig.tight_layout()
 save(fig, "hamiltonian_dynamics")
 
+# ---- kernel comparison: bars from CSV + seed-10 curves recomputed ----
+rows = load(SP + "kernel_comparison_summary.csv")
+import sys
+sys.path.append(_ROOT)
+from Synthetic_Error_Uncertainty_Check import (build_hamiltonian, build_initial_state,
+                                               generate_measurement_df, pauli_string_operator,
+                                               make_cell_seed)
+from classical_shadow_matrix import construct_classical_shadow_matrices_by_time
+from bayesian_matrix_inference_botorch import infer_observable_from_shadow_with_botorch
+tlist = np.linspace(0, 2 * np.pi, 400)
+states = qt.mesolve(build_hamiltonian("tfim", 2), build_initial_state(2), tlist, []).states
+op = pauli_string_operator("ZZ", 2)
+pt = np.linspace(0, 2 * np.pi, 100)
+truth = np.interp(pt, tlist, np.real(np.asarray(qt.expect(op, states))))
+oi = np.linspace(0, 399, 100, dtype=int)
+mdf = generate_measurement_df(states, tlist, oi, 2, 200, seed=make_cell_seed(10, "ZZ", 200, 100, 0))
+_, mt, mats = construct_classical_shadow_matrices_by_time(mdf, 2)
+curves = {}
+for k in ("rbf", "matern32"):
+    r = infer_observable_from_shadow_with_botorch(observations=mats, operator=op, time_index=mt,
+                                                  target_time_index=pt, kernel=k, credible_mass=0.95)
+    curves[k] = np.real(np.asarray(r["posterior_mean"], dtype=complex))
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(12.5, 4.4))
+x = np.arange(2); w = 0.36
+cols = {"rbf": "#5dade2", "matern32": "#e59866"}
+for i, k in enumerate(("rbf", "matern32")):
+    m, se = [], []
+    for o in ("XI", "ZZ"):
+        v = np.array([float(r["rmse"]) for r in rows if r["observable"] == o and r["kernel"] == k])
+        m.append(v.mean()); se.append(v.std(ddof=1) / np.sqrt(len(v)))
+    a1.bar(x + (i - 0.5) * w, m, w, yerr=se, capsize=3, color=cols[k], edgecolor="k", lw=.5, label=k)
+a1.set_xticks(x)
+a1.set_xticklabels([r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"])
+a1.set_ylabel("reconstruction RMSE")
+a1.legend()
+a1.grid(axis="y", alpha=.25)
+for k in ("rbf", "matern32"):
+    a2.plot(pt, curves[k], lw=1.6, color=cols[k], label=k)
+a2.plot(pt, truth, "k--", lw=1.4, label="truth")
+a2.set_xlabel("time")
+a2.legend(fontsize=8)
+a2.grid(alpha=.25)
+fig.tight_layout()
+save(fig, "kernel_comparison")
 print("[csvfigs] all done")

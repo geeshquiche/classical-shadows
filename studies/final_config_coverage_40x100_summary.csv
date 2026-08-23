@@ -1,18 +1,18 @@
-# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 40x100, 20 seeds 10..29, paired; wall=1299s
+# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 40x100, 20 seeds 10..29, paired; wall=154s
 observable,protocol,normalisation,noise,coverage_mean,coverage_se,rmse_mean,rmse_se
-XI,fixed,expected,empirical,0.9985,0.0015,0.1089,0.0083
-XI,fixed,expected,fitted,1.0,0.0,0.1118,0.0082
-XI,fixed,matched,empirical,0.998,0.0014,0.0794,0.0026
-XI,fixed,matched,fitted,1.0,0.0,0.0785,0.0029
-XI,rerandomised,expected,empirical,1.0,0.0,0.0898,0.0027
-XI,rerandomised,expected,fitted,1.0,0.0,0.0906,0.0026
-XI,rerandomised,matched,empirical,0.9995,0.0005,0.0744,0.0036
-XI,rerandomised,matched,fitted,1.0,0.0,0.0816,0.0033
-ZZ,fixed,expected,empirical,1.0,0.0,0.1627,0.0152
-ZZ,fixed,expected,fitted,1.0,0.0,0.1636,0.0153
-ZZ,fixed,matched,empirical,1.0,0.0,0.116,0.005
-ZZ,fixed,matched,fitted,1.0,0.0,0.1187,0.0048
-ZZ,rerandomised,expected,empirical,0.9995,0.0005,0.1575,0.0065
-ZZ,rerandomised,expected,fitted,1.0,0.0,0.1518,0.0059
-ZZ,rerandomised,matched,empirical,0.9985,0.0015,0.1271,0.0076
-ZZ,rerandomised,matched,fitted,1.0,0.0,0.1357,0.006
+XI,fixed,expected,empirical,0.9985,0.0015,0.1149,0.0093
+XI,fixed,expected,fitted,0.999,0.001,0.1183,0.0092
+XI,fixed,matched,empirical,1.0,0.0,0.0735,0.0041
+XI,fixed,matched,fitted,0.999,0.001,0.0795,0.0045
+XI,rerandomised,expected,empirical,1.0,0.0,0.087,0.004
+XI,rerandomised,expected,fitted,1.0,0.0,0.0896,0.0038
+XI,rerandomised,matched,empirical,0.999,0.001,0.0734,0.0029
+XI,rerandomised,matched,fitted,1.0,0.0,0.0795,0.0031
+ZZ,fixed,expected,empirical,0.9765,0.0168,0.209,0.0173
+ZZ,fixed,expected,fitted,0.9945,0.0055,0.2052,0.0145
+ZZ,fixed,matched,empirical,0.999,0.001,0.1524,0.0082
+ZZ,fixed,matched,fitted,1.0,0.0,0.1459,0.0064
+ZZ,rerandomised,expected,empirical,0.9975,0.002,0.1623,0.0058
+ZZ,rerandomised,expected,fitted,1.0,0.0,0.1533,0.0051
+ZZ,rerandomised,matched,empirical,0.9975,0.0025,0.134,0.0067
+ZZ,rerandomised,matched,fitted,1.0,0.0,0.1348,0.0051

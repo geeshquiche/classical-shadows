@@ -1,0 +1,11 @@
+# 3-route comparison, consistent matched-count estimator; MODE=robustness; 100 times, shadows=[40, 120, 240], 15 seeds 10..24, fixed-basis protocol (conditional requirement), paired data per seed; conditional internal estimator matched-basis; wall=5919s
+observable,shadow,route,n_seeds,rmse_mean,rmse_se,rrmse_mean,coverage_mean
+XI,40,raw,15,0.1991,0.0069,0.3358,
+XI,40,gp,15,0.0994,0.0078,0.1676,0.9993
+XI,40,conditional,15,0.1782,0.0069,0.3005,0.9933
+XI,120,raw,15,0.1102,0.0021,0.1858,
+XI,120,gp,15,0.0509,0.0026,0.0859,1.0
+XI,120,conditional,15,0.1557,0.002,0.2625,0.8687
+XI,240,raw,15,0.0778,0.0019,0.1313,
+XI,240,gp,15,0.0377,0.0017,0.0635,0.9993
+XI,240,conditional,15,0.1506,0.0019,0.254,0.694

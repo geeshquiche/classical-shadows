@@ -1,18 +1,18 @@
-# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 150x300, 20 seeds 10..29, paired; wall=4943s
+# final-configuration grid: protocol x normalisation, empnoise Matern-3/2 GP, 150x300, 20 seeds 10..29, paired; wall=1536s
 observable,protocol,normalisation,noise,coverage_mean,coverage_se,rmse_mean,rmse_se
-XI,fixed,expected,empirical,0.999,0.001,0.0497,0.005
-XI,fixed,expected,fitted,1.0,0.0,0.0506,0.0049
-XI,fixed,matched,empirical,0.999,0.0007,0.0267,0.0011
-XI,fixed,matched,fitted,1.0,0.0,0.0277,0.0009
-XI,rerandomised,expected,empirical,1.0,0.0,0.0337,0.0008
-XI,rerandomised,expected,fitted,1.0,0.0,0.0337,0.0008
-XI,rerandomised,matched,empirical,0.9995,0.0005,0.0298,0.0011
-XI,rerandomised,matched,fitted,1.0,0.0,0.0296,0.001
-ZZ,fixed,expected,empirical,0.9735,0.0211,0.0967,0.014
-ZZ,fixed,expected,fitted,0.9845,0.0155,0.0987,0.0136
-ZZ,fixed,matched,empirical,1.0,0.0,0.0491,0.0018
-ZZ,fixed,matched,fitted,1.0,0.0,0.0457,0.0021
-ZZ,rerandomised,expected,empirical,1.0,0.0,0.0585,0.0025
-ZZ,rerandomised,expected,fitted,1.0,0.0,0.0558,0.0026
-ZZ,rerandomised,matched,empirical,1.0,0.0,0.0507,0.0026
-ZZ,rerandomised,matched,fitted,1.0,0.0,0.0464,0.0022
+XI,fixed,expected,empirical,1.0,0.0,0.0517,0.0038
+XI,fixed,expected,fitted,1.0,0.0,0.0526,0.0038
+XI,fixed,matched,empirical,1.0,0.0,0.0287,0.0008
+XI,fixed,matched,fitted,1.0,0.0,0.0288,0.0009
+XI,rerandomised,expected,empirical,1.0,0.0,0.0326,0.001
+XI,rerandomised,expected,fitted,1.0,0.0,0.0325,0.0011
+XI,rerandomised,matched,empirical,0.9985,0.0008,0.0299,0.0012
+XI,rerandomised,matched,fitted,1.0,0.0,0.0284,0.001
+ZZ,fixed,expected,empirical,0.994,0.006,0.1047,0.0116
+ZZ,fixed,expected,fitted,1.0,0.0,0.1058,0.0115
+ZZ,fixed,matched,empirical,0.9995,0.0005,0.0503,0.0028
+ZZ,fixed,matched,fitted,1.0,0.0,0.0451,0.0027
+ZZ,rerandomised,expected,empirical,1.0,0.0,0.0567,0.0027
+ZZ,rerandomised,expected,fitted,1.0,0.0,0.0559,0.0023
+ZZ,rerandomised,matched,empirical,1.0,0.0,0.0498,0.0021
+ZZ,rerandomised,matched,fitted,1.0,0.0,0.0468,0.0018

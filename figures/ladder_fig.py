@@ -6,7 +6,7 @@ _EST = _os.path.join(_ROOT, "estimator_comparison") + "/"
 _STUDIES = _os.path.join(_ROOT, "studies") + "/"
 _os.makedirs(_OUT, exist_ok=True)
 """Sensitivity ladder figure: ZZ coverage + RMSE vs sampling density, 4 arms, empirical noise.
-Data: studies/final_config_coverage_{tag}_summary.csv (16-arm grid, 20 seeds each)."""
+Data: review_ablations/final_config_coverage_{tag}_summary.csv (16-arm grid, 20 seeds each)."""
 import csv
 import numpy as np
 import matplotlib
@@ -17,8 +17,8 @@ RA = _STUDIES
 OUT = _OUT
 SP = _OUT
 
-TAGS = ["20x60", "40x100", "60x150", "100x200", "150x300"]
-BUDGET = [20 * 60, 40 * 100, 60 * 150, 100 * 200, 150 * 300]
+TAGS = ["20x60", "40x100", "60x150", "100x200", "150x300", "200x400"]
+BUDGET = [20 * 60, 40 * 100, 60 * 150, 100 * 200, 150 * 300, 200 * 400]
 ARMS = [("rerandomised", "matched", "#2471a3", "-", "o", "realised count, fresh bases (this work)"),
         ("fixed", "matched", "#148f77", "--", "s", "realised count, fixed bases"),
         ("rerandomised", "expected", "#e67e22", "-.", "^", "expected rate, fresh bases"),
