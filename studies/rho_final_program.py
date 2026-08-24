@@ -15,7 +15,7 @@ Arms (2x2 de-confound): {noise: fitted, fixed-empirical} x {lengthscale: shared,
 RBF kernel, mirroring the house mll pipeline (fits imported from mll_shot_scaling).
 
 Errors: mean Frobenius distance to exact rho(t), absolute AND relative to the truth's mean
-Frobenius norm.
+Frobenius norm (consistent-fractions convention, 2026-08-21).
 
 Modes (env MODE):
   core   (default): 2q TFIM full rho, 500 times x 500 shadows, 20 seeds, all 4 arms
@@ -43,7 +43,7 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PARENT = os.path.dirname(_HERE)
-_FF = os.path.join(_PARENT, "per_element_rho")
+_FF = os.path.join(_PARENT, "for_fred_latest")
 for _p in (_PARENT, _FF):
     if _p not in sys.path:
         sys.path.append(_p)
@@ -77,6 +77,9 @@ elif MODE == "variants":
     REPEAT_ID = 0   # same cells as MODE=core -> identical data, paired against core arms
 else:
     raise SystemExit(f"unknown MODE={MODE}")
+if os.environ.get("NSEED"):
+    SEEDS = list(range(10, 10 + int(os.environ["NSEED"])))
+
 
 if QUICK:
     TRUE_T, N_TIMES, TARGET_T = 200, 60, 80
@@ -127,7 +130,8 @@ def outcome_signs(n_qubits):
     """signs[outcome_index, qubit] = +/-1.
 
     Kron ordering is big-endian: qubit 0 is the FIRST tensor factor, i.e. the HIGHEST bit of
-    the outcome index."""
+    the outcome index. (A little-endian version silently reads the wrong qubit's outcome and
+    contaminates every single-qubit Pauli estimate with 1/3 of the wrong-basis mean.)"""
     idx = np.arange(2 ** n_qubits)
     return np.array([1 - 2 * ((idx >> (n_qubits - 1 - q)) & 1) for q in range(n_qubits)]).T
 
@@ -202,7 +206,7 @@ def fit_shared_empnoise(to, tn, ch, n):
 
 
 def _variants_fitters():
-    """Variant-ladder arms, mirroring per_element_rho/mll_per_element_variants.py definitions."""
+    """Variant-ladder arms, mirroring for_fred_latest/mll_per_element_variants.py definitions."""
     sys.path.append(_FF)
     from mll_per_element_variants import (fit_per_element as v_pe, fit_per_element_grid,
                                           fit_grouped)
@@ -263,7 +267,8 @@ def main():
                       flush=True)
 
     ns = len(SEEDS)
-    print("\n==== SUMMARY (rel_frob = Frobenius / mean ||rho_true||_F) ====", flush=True)
+    print("\n==== SUMMARY (rel_frob = Frobenius / mean ||rho_true||_F; published old-pipeline "
+          "core refs: shared .0366, per-elem .0399, empnoise .0331) ====", flush=True)
     sum_rows = []
     for (nq, N, arm), d in sorted(per_seed.items()):
         arr = np.array([d[s] for s in SEEDS])

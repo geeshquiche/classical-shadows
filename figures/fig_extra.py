@@ -15,47 +15,51 @@ OUT = _OUT
 
 
 def fig_empnoise():
-    # studies/rho_final_variants_summary.csv (20 seeds)
-    names = ["per-elem\n(empnoise)", "per-elem\nbound", "shared", "grouped",
-             "per-elem\nrestart", "per-elem\ngrid", "per-elem\n(fully fitted)"]
+    """Forest plot: per-element variants against the shared baseline (20 seeds)."""
+    names = ["per-element,\nempirical noise", "per-element,\nbounded", "shared", "grouped",
+             "per-element,\nrestarts", "per-element,\ngrid search", "per-element,\nfully fitted"]
     rmse = [0.0303, 0.0327, 0.0333, 0.0337, 0.0364, 0.0373, 0.0377]
     se = [0.0004, 0.0005, 0.0004, 0.0004, 0.0007, 0.0007, 0.0005]
     colors = ["#27ae60", "#cd6155", "#2c3e50", "#7f8c8d", "#cd6155", "#cd6155", "#cd6155"]
-    fig, ax = plt.subplots(figsize=(7.2, 4.2))
-    ax.bar(range(7), rmse, yerr=se, capsize=3, color=colors, edgecolor="k", lw=.5)
-    ax.axhline(0.0333, ls="--", color="#2c3e50", lw=1, alpha=.7)
-    ax.set_xticks(range(7))
-    ax.set_xticklabels(names, fontsize=8)
-    ax.set_ylabel(r"reconstruction RMSE (full $\rho$)")
-    ax.set_ylim(0.028, 0.040)
-    ax.set_title("Per-element beats a shared model only when the noise is fixed to the shadow variance\n"
-                 "(20 seeds; dashed line = shared baseline)", fontsize=9.5)
-    ax.annotate("fixing the noise\n($-9.1\\%$)", xy=(0, 0.0303), xytext=(0.55, 0.0305),
-                fontsize=8, color="#1e8449", arrowprops=dict(arrowstyle="->", color="#1e8449"))
-    ax.grid(axis="y", alpha=.25)
+    y = np.arange(len(names))[::-1]
+    fig, ax = plt.subplots(figsize=(7.4, 4.4))
+    ax.axvline(0.0333, ls="--", color="#2c3e50", lw=1.1, alpha=.8, zorder=0)
+    ax.errorbar(rmse, y, xerr=se, fmt="none", ecolor="k", elinewidth=1.1, capsize=3, zorder=1)
+    ax.scatter(rmse, y, s=70, c=colors, edgecolor="k", linewidth=.6, zorder=2)
+    ax.set_yticks(y); ax.set_yticklabels(names, fontsize=9)
+    ax.set_xlabel(r"Frobenius error of $\rho(t)$")
+    ax.text(0.0333, y[0] + 0.55, "shared baseline", fontsize=8.5, color="#2c3e50", ha="center")
+    ax.set_ylim(y[-1] - 0.8, y[0] + 0.9)
+    ax.grid(axis="x", alpha=.25)
     fig.tight_layout()
-    fig.savefig(OUT + "empnoise.png", dpi=150); fig.savefig(OUT + "empnoise.pdf")
-    fig.savefig(SP + "/empnoise.png", dpi=150); fig.savefig(SP + "/empnoise.pdf")
+    fig.savefig(_OUT + "empnoise.png", dpi=150); fig.savefig(_OUT + "empnoise.pdf")
     print("empnoise fig done")
 
 
 def fig_locality():
-    k = np.array([1, 2, 3])
-    meas = np.array([2.98, 8.69, 26.76])
-    fig, ax = plt.subplots(figsize=(6.6, 4.2))
-    ax.plot(k, 3.0 ** k, "k--", lw=1.2, label=r"$3^k$")
-    ax.plot(k, meas, "o", ms=9, color="#e67e22", label="measured shadow variance")
-    ax.set_yscale("log")
-    ax.set_xticks(k)
-    ax.set_xlabel("observable weight $k$")
-    ax.set_ylabel("per-shadow variance")
-    ax.set_title(r"Shadow variance grows as $3^k$ with weight and is independent of system size"
-                 "\n(4-qubit chain; for $k=2$ it holds flat at $\\approx 8.6$ for $n=2$ to $6$)", fontsize=9.5)
-    ax.legend()
-    ax.grid(alpha=.25, which="both")
+    """Two panels: variance vs observable weight, and variance vs system size at fixed weight."""
+    rows = [l.split(",") for l in open(_PER_ELEM + "mll_k_vs_n.csv").read().splitlines()
+            if l and not l.startswith("#") and not l.startswith("sweep")]
+    kd = sorted([(int(r[2]), float(r[4])) for r in rows if "k-dep" in r[0]])
+    nd = sorted([(int(r[1]), float(r[4])) for r in rows if "n-indep" in r[0]])
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.4, 4.1))
+    ks = np.array([k for k, _ in kd]); vs = np.array([v for _, v in kd])
+    a1.plot(ks, 3.0 ** ks, "k--", lw=1.3, label=r"$3^k$")
+    a1.plot(ks, vs, "o", ms=10, color="#e67e22", label="measured")
+    a1.set_yscale("log"); a1.set_xticks(ks)
+    a1.set_yticks([3, 9, 27]); a1.set_yticklabels(["3", "9", "27"])
+    a1.set_xlabel("observable weight $k$ (at $n=4$)")
+    a1.set_ylabel("per-shadow variance")
+    a1.legend(fontsize=10); a1.grid(alpha=.25, which="both")
+    ns = np.array([n for n, _ in nd]); vn = np.array([v for _, v in nd])
+    a2.axhline(9, ls="--", color="k", lw=1.3, label=r"$3^k=9$")
+    a2.plot(ns, vn, "s", ms=10, color="#2471a3", label="measured")
+    a2.set_ylim(0, 12); a2.set_xticks(ns)
+    a2.set_xlabel("chain length $n$ (at $k=2$)")
+    a2.set_ylabel("per-shadow variance")
+    a2.legend(fontsize=10); a2.grid(alpha=.25)
     fig.tight_layout()
-    fig.savefig(OUT + "locality.png", dpi=150); fig.savefig(OUT + "locality.pdf")
-    fig.savefig(SP + "/locality.png", dpi=150); fig.savefig(SP + "/locality.pdf")
+    fig.savefig(_OUT + "locality.png", dpi=150); fig.savefig(_OUT + "locality.pdf")
     print("locality fig done")
 
 

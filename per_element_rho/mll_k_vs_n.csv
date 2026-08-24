@@ -1,0 +1,8 @@
+# reduced rho(t) from n-qubit TFIM chain; M=200 times; 300 shadows; 5 seeds; shot_var=measured single-shot shadow variance (compare 3^k); empnoise_vs_shared_pct = +better; wall=1335s; peak_mem=383MB
+sweep,n_total,k_subsys,matrix,shot_var_per_shot,3^k,shared,shared_SE,per_elem,empnoise,empnoise_SE,empnoise_vs_shared_pct
+n-indep,2,2,4x4,8.57,9,0.0685,0.0018,0.0773,0.063,0.002,7.9
+n-indep,3,2,4x4,8.67,9,0.0709,0.002,0.0807,0.0668,0.0019,5.8
+n-indep/k-dep,4,2,4x4,8.69,9,0.0737,0.001,0.0904,0.0697,0.0011,5.4
+n-indep,6,2,4x4,8.73,9,0.069,0.0014,0.0909,0.0633,0.0011,8.2
+k-dep,4,1,2x2,2.98,3,0.0259,0.0016,0.0382,0.0199,0.0013,23.1
+k-dep,4,3,8x8,26.76,27,0.2019,0.0052,0.2314,0.1704,0.0023,15.6

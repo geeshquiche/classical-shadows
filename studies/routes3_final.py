@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Three-route comparison under the consistent (matched-count) estimator, house seed counts.
 
-Routes :
+Routes (independent-marginal binned per 2026-08-20 decision):
   raw          : matched-count per-time estimates, linear interpolation
   gp           : final-method GP (matched-count series, smoothed SE, empirical noise, Matern-3/2)
-  conditional  : autoregressive classifier route with its internal
+  conditional  : autoregressive classifier route (mechanics unchanged), with its internal
                  resampling estimator ALSO set to matched-basis normalisation for consistency
 
 Protocol: FIXED bases per shot index (the conditional route requires it; the matched-count
 normalisation makes raw/gp insensitive to the frozen draw). All routes see identical data per
 seed. Errors are reported absolute and RELATIVE to the true signal scale,
 rRMSE = RMSE / sqrt(mean(truth^2)), so fractions compare consistently across observables and
-studies .
+studies (Vageesh's convention, 2026-08-21).
 
 Modes (env MODE):
   table       (default): 2q TFIM, 100x200, seeds 10..29 (20), XI + ZZ      -> Table 1
@@ -70,6 +70,8 @@ elif MODE == "fourq":
     SEEDS = [10] if QUICK else list(range(10, 20))
 else:
     raise SystemExit(f"unknown MODE={MODE}")
+if os.environ.get("NSEED"):
+    SEEDS = list(range(10, 10 + int(os.environ["NSEED"])))
 if os.environ.get("OBS"):
     OBSERVABLES = os.environ["OBS"].split(",")
 TAG = MODE + ("_" + "_".join(OBSERVABLES) if os.environ.get("OBS") else "")

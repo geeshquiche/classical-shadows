@@ -34,7 +34,7 @@ for tag in TAGS:
                     float(r["coverage_mean"]), float(r["coverage_se"]),
                     float(r["rmse_mean"]), float(r["rmse_se"]))
 
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(11.5, 4.2))
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(12.4, 4.4))
 for prot, norm, c, ls, mk, lab in ARMS:
     cov = [data[(t, prot, norm)][0] for t in TAGS]
     cse = [data[(t, prot, norm)][1] for t in TAGS]
@@ -52,7 +52,7 @@ a1.set_ylabel("empirical coverage of the nominal 95% band")
 a1.set_xlabel(r"sampling density (times $\times$ shadows per time)")
 a1.set_ylim(0.88, 1.02)
 a1.grid(alpha=.25)
-a1.legend(fontsize=7.5, loc="lower right")
+a1.legend(fontsize=9, loc="lower right", framealpha=.92)
 a2.set_xscale("log")
 a2.set_yscale("log")
 a2.set_xticks(BUDGET)

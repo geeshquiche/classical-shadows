@@ -72,11 +72,12 @@ for ax, (obs, fname, tt) in zip(axes, [("XI", "routes3_robustness_XI.csv", r"$\l
         ax.errorbar(xs, ms, yerr=ses, marker="o", ms=4.5, lw=1.7, capsize=3, color=colors[rt], label=labels[rt])
     ax.set_xlabel("shadows per observed time (budget)"); ax.set_title(tt); ax.grid(alpha=.25)
     ax.set_xticks([40, 120, 240])
-axes[0].set_ylabel("RMSE"); axes[0].legend(fontsize=9)
+axes[0].set_ylabel("RMSE")
+axes[0].legend(fontsize=9, loc="upper right", framealpha=.92)
 fig.tight_layout()
 save(fig, "route_robustness")
 
-# ---- n-qubit scaling (matched-Pauli program) ----
+# ---- n-qubit scaling (matched-Pauli program, 2026-08-21) ----
 RA = _STUDIES
 rows = load(RA + "rho_final_nqubit_summary.csv")
 by = {(r["qubits"], r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
@@ -95,24 +96,25 @@ ax.grid(axis="y", alpha=.25)
 fig.tight_layout()
 save(fig, "nqubit_scaling")
 
-# ---- 2x2 de-confound (matched-Pauli program core, 20 seeds) ----
-rows = load(RA + "rho_final_core_summary.csv")
+# ---- 2x2 de-confound: interaction plot (rho_final_program MODE=core, 20 seeds) ----
+rows = load(_STUDIES + "rho_final_core_summary.csv")
 by = {r["arm"]: (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
-order = ["shared", "per-elem", "shared-empnoise", "empnoise"]
-names = ["shared $\\ell$,\nfitted $\\sigma^2$", "per-element $\\ell$,\nfitted $\\sigma^2$",
-         "shared $\\ell$,\nfixed $\\sigma^2$", "per-element $\\ell$,\nfixed $\\sigma^2$"]
-fig, ax = plt.subplots(figsize=(6.6, 4.0))
-ax.bar(range(4), [by[o][0] for o in order], 0.55, yerr=[by[o][1] for o in order], capsize=3,
-       color=["#2c3e50", "#c0392b", "#7fb3d5", "#27ae60"], edgecolor="k", lw=.5)
-ax.set_xticks(range(4))
-ax.set_xticklabels(names, fontsize=8)
+fig, ax = plt.subplots(figsize=(6.6, 4.2))
+xpos = [0, 1]
+for arms, lab, c, mk in [(("shared", "shared-empnoise"), r"shared $\ell$", "#2c3e50", "o"),
+                         (("per-elem", "empnoise"), r"per-element $\ell$", "#27ae60", "s")]:
+    m = [by[a][0] for a in arms]; e = [by[a][1] for a in arms]
+    ax.errorbar(xpos, m, yerr=e, marker=mk, ms=9, lw=1.8, capsize=4, color=c, label=lab)
+ax.set_xticks(xpos)
+ax.set_xticklabels([r"noise fitted", r"noise supplied" "\n" r"(measured variance)"])
+ax.set_xlim(-0.35, 1.35)
 ax.set_ylabel(r"Frobenius error of $\rho(t)$")
-ax.set_ylim(0.027, 0.040)
-ax.grid(axis="y", alpha=.25)
+ax.legend(fontsize=10)
+ax.grid(alpha=.25)
 fig.tight_layout()
 save(fig, "twobytwo")
 
-# ---- budget comparison (matched-count estimator rerun) ----
+# ---- budget comparison (matched-count estimator rerun, 2026-08-21) ----
 rows = load(RA + "budget_final_summary.csv")
 fig, axes = plt.subplots(1, 2, figsize=(9.6, 4.0))
 for ax, obs, tt in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"]):
@@ -132,7 +134,7 @@ axes[0].legend(fontsize=8)
 fig.tight_layout()
 save(fig, "budget_comparison")
 
-# ---- shot scaling (matched-Pauli program, 10 seeds) ----
+# ---- shot scaling (matched-Pauli program, 10 seeds, 2026-08-21) ----
 rows = load(RA + "rho_final_shots_summary.csv")
 N = np.array(sorted({float(r["N"]) for r in rows}))
 by = {(float(r["N"]), r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
@@ -146,6 +148,8 @@ for k, (c, lab) in styles.items():
 ax.plot(N, by[(N[0], "shared")][0] * np.sqrt(N[0] / N), "k--", lw=1.1, alpha=0.7, label=r"$N^{-1/2}$ guide")
 ax.set_xscale("log"); ax.set_yscale("log")
 ax.set_xticks(N); ax.set_xticklabels([int(n) for n in N]); ax.minorticks_off()
+_yt = [0.01, 0.02, 0.03, 0.05, 0.08]
+ax.set_yticks(_yt); ax.set_yticklabels([f"{v:g}" for v in _yt])
 ax.set_xlabel("shadows per observed time, $N$")
 ax.set_ylabel(r"Frobenius error of $\rho(t)$")
 ax.grid(alpha=0.25, which="both")
@@ -201,48 +205,4 @@ for ax in axes[:, 0]:
 fig.tight_layout()
 save(fig, "hamiltonian_dynamics")
 
-# ---- kernel comparison: bars from CSV + seed-10 curves recomputed ----
-rows = load(SP + "kernel_comparison_summary.csv")
-import sys
-sys.path.append(_ROOT)
-from Synthetic_Error_Uncertainty_Check import (build_hamiltonian, build_initial_state,
-                                               generate_measurement_df, pauli_string_operator,
-                                               make_cell_seed)
-from classical_shadow_matrix import construct_classical_shadow_matrices_by_time
-from bayesian_matrix_inference_botorch import infer_observable_from_shadow_with_botorch
-tlist = np.linspace(0, 2 * np.pi, 400)
-states = qt.mesolve(build_hamiltonian("tfim", 2), build_initial_state(2), tlist, []).states
-op = pauli_string_operator("ZZ", 2)
-pt = np.linspace(0, 2 * np.pi, 100)
-truth = np.interp(pt, tlist, np.real(np.asarray(qt.expect(op, states))))
-oi = np.linspace(0, 399, 100, dtype=int)
-mdf = generate_measurement_df(states, tlist, oi, 2, 200, seed=make_cell_seed(10, "ZZ", 200, 100, 0))
-_, mt, mats = construct_classical_shadow_matrices_by_time(mdf, 2)
-curves = {}
-for k in ("rbf", "matern32"):
-    r = infer_observable_from_shadow_with_botorch(observations=mats, operator=op, time_index=mt,
-                                                  target_time_index=pt, kernel=k, credible_mass=0.95)
-    curves[k] = np.real(np.asarray(r["posterior_mean"], dtype=complex))
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(12.5, 4.4))
-x = np.arange(2); w = 0.36
-cols = {"rbf": "#5dade2", "matern32": "#e59866"}
-for i, k in enumerate(("rbf", "matern32")):
-    m, se = [], []
-    for o in ("XI", "ZZ"):
-        v = np.array([float(r["rmse"]) for r in rows if r["observable"] == o and r["kernel"] == k])
-        m.append(v.mean()); se.append(v.std(ddof=1) / np.sqrt(len(v)))
-    a1.bar(x + (i - 0.5) * w, m, w, yerr=se, capsize=3, color=cols[k], edgecolor="k", lw=.5, label=k)
-a1.set_xticks(x)
-a1.set_xticklabels([r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"])
-a1.set_ylabel("reconstruction RMSE")
-a1.legend()
-a1.grid(axis="y", alpha=.25)
-for k in ("rbf", "matern32"):
-    a2.plot(pt, curves[k], lw=1.6, color=cols[k], label=k)
-a2.plot(pt, truth, "k--", lw=1.4, label="truth")
-a2.set_xlabel("time")
-a2.legend(fontsize=8)
-a2.grid(alpha=.25)
-fig.tight_layout()
-save(fig, "kernel_comparison")
 print("[csvfigs] all done")

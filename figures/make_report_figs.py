@@ -18,7 +18,8 @@ OUT = _OUT
 
 
 def fig_route():
-    # Values = 20-seed means/SEs of the route table (studies/routes3_table_summary.csv).
+    # Values = 20-seed means/SEs of Table tab:routes (routes3_table_summary.csv, 2026-08-21,
+    # final matched-count estimator; marginal route binned to a cautionary note).
     xm=[0.082,0.037,0.158]; xe=[0.002,0.002,0.002]
     zm=[0.153,0.072,0.205]; ze=[0.005,0.004,0.003]
     labels=["raw","GP\nregression","conditional"]
@@ -73,14 +74,16 @@ def fig_recon():
     ax.plot(ot, est, "o", ms=3.5, color="#e59866", alpha=0.8, label="shadow estimates")
     ax.plot(tg, mean, "-", color="#2471a3", lw=1.8, label="GP reconstruction")
     ax.fill_between(tg, mean - band, mean + band, color="#2471a3", alpha=0.18, label="95% band")
-    ax.set_xlabel("time")
+    ax.set_xticks([0, np.pi / 2, np.pi, 3 * np.pi / 2, 2 * np.pi])
+    ax.set_xticklabels(["0", r"$\pi/2$", r"$\pi$", r"$3\pi/2$", r"$2\pi$"])
+    ax.set_xlabel("time $t$")
     ax.set_ylabel(r"$\langle X_0\rangle$")
     ax.set_title("Reconstructing a single-observable trajectory with uncertainty (2-qubit TFIM)", fontsize=10)
     ax.legend(fontsize=8, ncol=2, loc="lower left")
     ax.grid(alpha=0.25)
     fig.tight_layout()
-    fig.savefig(OUT + "reconstruction_band.png", dpi=150); fig.savefig(OUT + "reconstruction_band.pdf")
-    fig.savefig(SP + "/reconstruction_band.png", dpi=150); fig.savefig(SP + "/reconstruction_band.pdf")
+    fig.savefig(_OUT + "reconstruction_band.png", dpi=150); fig.savefig(_OUT + "reconstruction_band.pdf")
+    fig.savefig(_OUT + "/reconstruction_band.png", dpi=150); fig.savefig(_OUT + "/reconstruction_band.pdf")
     print("recon fig done")
 
 

@@ -45,7 +45,8 @@ TIME_MIN, TIME_MAX = 0.0, 2.0 * np.pi
 if QUICK:
     TRUE_T, N_TIMES, TARGET_T, SHADOW, SEEDS = 80, 24, 80, 120, [10, 20]
 else:
-    TRUE_T, N_TIMES, TARGET_T, SHADOW, SEEDS = 300, 200, 120, 300, [10, 20, 30, 40, 50]
+    TRUE_T, N_TIMES, TARGET_T, SHADOW = 300, 200, 120, 300
+    SEEDS = [10 * i for i in range(1, int(os.environ.get('NSEED', '5')) + 1)]
 LS_GRID = np.geomspace(0.02, 1.0, 7)
 NOISE_GRID = np.geomspace(1e-3, 3e-1, 5)
 VARIANTS = ["shared", "per-elem", "empnoise"]
@@ -62,6 +63,8 @@ CONFIGS = [
 
 
 def avg_shadow_matrices(states, obs_idx, seed, shadow, nq, subsys):
+    from Synthetic_Error_Uncertainty_Check import make_cell_seed
+    seed = make_cell_seed(seed, 'Z' * len(subsys), shadow, len(obs_idx), 8 + nq)
     """Averaged shadow matrix + per-element variance-of-the-mean, PLUS the mean single-shot variance
     of the k-body Z correlator <Z^{otimes k}> (the clean 3^k demonstrator)."""
     np.random.seed(seed); random.seed(seed)
@@ -191,10 +194,11 @@ def run_config(tag, nq, subsys, t0):
     ns = len(SEEDS)
     res = {v: (float(np.mean(scores[v])), float(np.std(scores[v], ddof=1) / np.sqrt(ns))) for v in VARIANTS}
     sv = float(np.mean(zvar))
+    sv_se = float(np.std(zvar, ddof=1) / np.sqrt(len(zvar))) if len(zvar) > 1 else 0.0
     print(f"  [{tag}] n={nq} k={k} ({n}x{n})  <Z^k>var/shot={sv:.2f} (3^k={3**k})  "
           + "  ".join(f"{v}={res[v][0]:.4f}" for v in VARIANTS) + f"  ({time.perf_counter()-t0:.0f}s)",
           flush=True)
-    return res, sv
+    return res, sv, sv_se
 
 
 def main():
@@ -203,21 +207,21 @@ def main():
           f"{len(SEEDS)} seeds\n", flush=True)
     rows = []
     for tag, nq, subsys in CONFIGS:
-        res, sv = run_config(tag, nq, subsys, t0)
-        rows.append((tag, nq, len(subsys), 2 ** len(subsys), sv, res))
+        res, sv, sv_se = run_config(tag, nq, subsys, t0)
+        rows.append((tag, nq, len(subsys), 2 ** len(subsys), sv, sv_se, res))
 
     # ---- figure: (left) shot variance vs config; (right) RMSE shared vs empnoise per config ----
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(14, 5))
-    labels = [f"n={nq},k={k}" for (tag, nq, k, mm, sv, res) in rows]
-    a1.bar(range(len(rows)), [sv for (_, _, _, _, sv, _) in rows], color="tab:purple")
-    for x, (tag, nq, k, mm, sv, res) in enumerate(rows):
+    labels = [f"n={nq},k={k}" for (tag, nq, k, mm, sv, sv_se, res) in rows]
+    a1.bar(range(len(rows)), [sv for (_, _, _, _, sv, _, _) in rows], color="tab:purple")
+    for x, (tag, nq, k, mm, sv, sv_se, res) in enumerate(rows):
         a1.text(x, sv, f"3^k={3**k}", ha="center", va="bottom", fontsize=8)
     a1.set_xticks(range(len(rows))); a1.set_xticklabels(labels, rotation=30, ha="right")
     a1.set_ylabel("measured single-shot shadow variance")
     a1.set_title("Shadow noise: grows with k, flat in n"); a1.grid(axis="y", alpha=0.3)
     for v, col in zip(["shared", "empnoise"], ["tab:blue", "tab:green"]):
-        a2.errorbar(range(len(rows)), [res[v][0] for (_, _, _, _, _, res) in rows],
-                    yerr=[res[v][1] for (_, _, _, _, _, res) in rows], marker="o", lw=1.5,
+        a2.errorbar(range(len(rows)), [res[v][0] for (_, _, _, _, _, _, res) in rows],
+                    yerr=[res[v][1] for (_, _, _, _, _, _, res) in rows], marker="o", lw=1.5,
                     capsize=3, color=col, label=v)
     a2.set_xticks(range(len(rows))); a2.set_xticklabels(labels, rotation=30, ha="right")
     a2.set_ylabel("Frobenius to exact reduced ρ(t)")
@@ -231,11 +235,11 @@ def main():
         w.writerow([f"# reduced rho(t) from n-qubit TFIM chain; M={N_TIMES} times; {SHADOW} shadows; "
                     f"{len(SEEDS)} seeds; shot_var=measured single-shot shadow variance (compare 3^k); "
                     f"empnoise_vs_shared_pct = +better; wall={wall:.0f}s; peak_mem={peak_mb:.0f}MB"])
-        w.writerow(["sweep", "n_total", "k_subsys", "matrix", "shot_var_per_shot", "3^k",
+        w.writerow(["sweep", "n_total", "k_subsys", "matrix", "shot_var_per_shot", "shot_var_SE", "3^k",
                     "shared", "shared_SE", "per_elem", "empnoise", "empnoise_SE", "empnoise_vs_shared_pct"])
-        for tag, nq, k, mm, sv, res in rows:
+        for tag, nq, k, mm, sv, sv_se, res in rows:
             base = res["shared"][0]
-            w.writerow([tag, nq, k, f"{mm}x{mm}", round(sv, 2), 3 ** k,
+            w.writerow([tag, nq, k, f"{mm}x{mm}", round(sv, 3), round(sv_se, 3), 3 ** k,
                         round(res["shared"][0], 4), round(res["shared"][1], 4),
                         round(res["per-elem"][0], 4), round(res["empnoise"][0], 4),
                         round(res["empnoise"][1], 4), round((1 - res["empnoise"][0] / base) * 100, 1)])

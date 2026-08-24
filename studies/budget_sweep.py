@@ -2,7 +2,7 @@
 """Budget allocation across TOTAL budgets: does 'one deep dataset beats several shallow ones' hold
 at every budget?  Per-time budget B in {200, 500, 1000, 2000}; allocations 1xB, 2x(B/2), 5x(B/5)
 (reconstructions averaged); noise {empirical, fitted}; 20 seeds; 500 observed times; exact
-matched-count sampling .  Run: python budget_sweep.py (QUICK=1 smoke)."""
+matched-count sampling (see budget_final.py).  Run: python budget_sweep.py (QUICK=1 smoke)."""
 import os, sys, csv, time as _time, warnings
 os.environ.setdefault("MPLCONFIGDIR", os.path.join(os.environ.get("TMPDIR", "/tmp"), "mplcfg"))
 import numpy as np, qutip as qt

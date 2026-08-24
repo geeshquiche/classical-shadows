@@ -44,7 +44,7 @@ for (i, j), part, ys, mu, sd, alpha in ch:
 
 plt.rcParams.update({"font.size": 13, "axes.labelsize": 13, "legend.fontsize": 12})
 sel = [((0, 0), "real", r"$\rho_{00}$ (population)"), ((0, 1), "real", r"$\mathrm{Re}\,\rho_{01}$"),
-       ((0, 3), "real", r"$\mathrm{Re}\,\rho_{03}$"), ((1, 2), "imag", r"$\mathrm{Im}\,\rho_{12}$")]
+       ((0, 1), "imag", r"$\mathrm{Im}\,\rho_{01}$"), ((0, 3), "real", r"$\mathrm{Re}\,\rho_{03}$")]
 fig, axes = plt.subplots(2, 2, figsize=(11, 7.2), sharex=True)
 for ax, ((i, j), part, lab) in zip(axes.ravel(), sel):
     f = (lambda z: z.real) if part == "real" else (lambda z: z.imag)
@@ -52,7 +52,11 @@ for ax, ((i, j), part, lab) in zip(axes.ravel(), sel):
     ax.plot(target, f(truth[:, i, j]), "k-", lw=2, label="exact")
     ax.plot(target, f(pred[:, i, j]), "-", color="#2471a3", lw=2, label="GP reconstruction")
     ax.set_title(lab, fontsize=14); ax.grid(alpha=.25)
-for ax in axes[1]: ax.set_xlabel("time")
+_ticks = [0, np.pi / 2, np.pi, 3 * np.pi / 2, 2 * np.pi]
+_tlabels = ["0", r"$\pi/2$", r"$\pi$", r"$3\pi/2$", r"$2\pi$"]
+for ax in axes.ravel():
+    ax.set_xticks(_ticks); ax.set_xticklabels(_tlabels)
+for ax in axes[1]: ax.set_xlabel("time $t$")
 axes[0, 0].legend(loc="upper right", framealpha=.9)
 fig.tight_layout()
 for ext in ("pdf", "png"): fig.savefig(_os.path.join(_OUT, f"element_grid.{ext}"), dpi=150)
