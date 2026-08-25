@@ -1,8 +1,8 @@
-# reduced rho(t) from n-qubit TFIM chain; M=200 times; 300 shadows; 5 seeds; shot_var=measured single-shot shadow variance (compare 3^k); empnoise_vs_shared_pct = +better; wall=1335s; peak_mem=383MB
-sweep,n_total,k_subsys,matrix,shot_var_per_shot,3^k,shared,shared_SE,per_elem,empnoise,empnoise_SE,empnoise_vs_shared_pct
-n-indep,2,2,4x4,8.57,9,0.0685,0.0018,0.0773,0.063,0.002,7.9
-n-indep,3,2,4x4,8.67,9,0.0709,0.002,0.0807,0.0668,0.0019,5.8
-n-indep/k-dep,4,2,4x4,8.69,9,0.0737,0.001,0.0904,0.0697,0.0011,5.4
-n-indep,6,2,4x4,8.73,9,0.069,0.0014,0.0909,0.0633,0.0011,8.2
-k-dep,4,1,2x2,2.98,3,0.0259,0.0016,0.0382,0.0199,0.0013,23.1
-k-dep,4,3,8x8,26.76,27,0.2019,0.0052,0.2314,0.1704,0.0023,15.6
+# reduced rho(t) from n-qubit TFIM chain; M=200 times; 300 shadows; 20 seeds; shot_var=measured single-shot shadow variance (compare 3^k); empnoise_vs_shared_pct = +better; wall=8948s; peak_mem=386MB
+sweep,n_total,k_subsys,matrix,shot_var_per_shot,shot_var_SE,3^k,shared,shared_SE,per_elem,empnoise,empnoise_SE,empnoise_vs_shared_pct
+n-indep,2,2,4x4,8.579,0.024,9,0.0716,0.001,0.0796,0.0663,0.001,7.3
+n-indep,3,2,4x4,8.697,0.025,9,0.0727,0.0007,0.0824,0.0683,0.0008,6.0
+n-indep/k-dep,4,2,4x4,8.67,0.02,9,0.0713,0.0008,0.0872,0.0677,0.001,5.0
+n-indep,6,2,4x4,8.746,0.02,9,0.0708,0.0009,0.0901,0.0645,0.0008,8.8
+k-dep,4,1,2x2,2.994,0.004,3,0.0262,0.0011,0.0412,0.0175,0.0008,33.3
+k-dep,4,3,8x8,26.852,0.057,27,0.1946,0.0049,0.2314,0.1698,0.0011,12.7

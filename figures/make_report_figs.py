@@ -1,9 +1,9 @@
 import os as _os
 _ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
-_OUT = _os.path.join(_ROOT, "figures", "out") + "/"
-_PER_ELEM = _os.path.join(_ROOT, "per_element_rho") + "/"
-_EST = _os.path.join(_ROOT, "estimator_comparison") + "/"
-_STUDIES = _os.path.join(_ROOT, "studies") + "/"
+_OUT = _os.path.join(_ROOT, "figures","out") +"/"
+_PER_ELEM = _os.path.join(_ROOT,"per_element_rho") +"/"
+_EST = _os.path.join(_ROOT,"estimator_comparison") +"/"
+_STUDIES = _os.path.join(_ROOT,"studies") +"/"
 _os.makedirs(_OUT, exist_ok=True)
 """Generate clean report-quality figures. Independent seeds throughout."""
 import csv, statistics as st
@@ -11,6 +11,9 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import sys as _sys, os as _os2
+_sys.path.append(_os2.path.dirname(_os2.path.abspath(__file__)))
+import report_style  # noqa: F401  (sets shared rcParams)
 import qutip as qt
 
 SP = _OUT
@@ -69,21 +72,19 @@ def fig_recon():
     mean = Ks @ np.linalg.solve(K, est)
     var = sf2 - np.sum(Ks * np.linalg.solve(K, Ks.T).T, axis=1)
     band = 2 * np.sqrt(np.clip(var, 0, None) + np.interp(tg, ot, nv_pt))
-    fig, ax = plt.subplots(figsize=(7.2, 4.0))
-    ax.plot(tg, truth, "k-", lw=1.6, label="truth")
-    ax.plot(ot, est, "o", ms=3.5, color="#e59866", alpha=0.8, label="shadow estimates")
-    ax.plot(tg, mean, "-", color="#2471a3", lw=1.8, label="GP reconstruction")
+    fig, ax = plt.subplots(figsize=(6.7, 3.8))
+    ax.plot(tg, truth,"k-", lw=1.6, label="truth")
+    ax.plot(ot, est,"o", ms=3.5, color="#e59866", alpha=0.8, label="shadow estimates")
+    ax.plot(tg, mean,"-", color="#2471a3", lw=1.8, label="GP reconstruction")
     ax.fill_between(tg, mean - band, mean + band, color="#2471a3", alpha=0.18, label="95% band")
-    ax.set_xticks([0, np.pi / 2, np.pi, 3 * np.pi / 2, 2 * np.pi])
-    ax.set_xticklabels(["0", r"$\pi/2$", r"$\pi$", r"$3\pi/2$", r"$2\pi$"])
     ax.set_xlabel("time $t$")
     ax.set_ylabel(r"$\langle X_0\rangle$")
     ax.set_title("Reconstructing a single-observable trajectory with uncertainty (2-qubit TFIM)", fontsize=10)
     ax.legend(fontsize=8, ncol=2, loc="lower left")
     ax.grid(alpha=0.25)
     fig.tight_layout()
-    fig.savefig(_OUT + "reconstruction_band.png", dpi=150); fig.savefig(_OUT + "reconstruction_band.pdf")
-    fig.savefig(_OUT + "/reconstruction_band.png", dpi=150); fig.savefig(_OUT + "/reconstruction_band.pdf")
+    fig.savefig(_OUT +"reconstruction_band.png", dpi=150); fig.savefig(_OUT +"reconstruction_band.pdf")
+    fig.savefig(_OUT +"/reconstruction_band.png", dpi=150); fig.savefig(_OUT +"/reconstruction_band.pdf")
     print("recon fig done")
 
 
