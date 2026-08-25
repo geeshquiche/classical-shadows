@@ -2,6 +2,7 @@
 \usepackage[a4paper,margin=2.2cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \newcommand{\be}{\begin{equation}}
@@ -36,6 +37,16 @@ each budget, and is systematically too small. In the audit that motivated this d
 understated the standard error of a budget difference by roughly a quarter (0.0038 against 0.0050),
 inflating an apparent significance from $16.5\sigma$ to $20.3\sigma$. Every budget point in every seed
 therefore draws an independent dataset.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{nested_vs_independent}
+\caption{Nested versus independent seeding for a shadow-budget sweep of $\langle X_0\rangle$. Each faint
+line is one seed: nested prefixes (red) move together because they share draws, while independent draws
+(blue) scatter. The inset gives the standard error of the budget contrast
+$\mathrm{err}(100)-\mathrm{err}(400)$, which nested seeding understates. Left, at the raw-estimate level;
+right, after Gaussian-process reconstruction.}
+\end{figure}
 
 \paragraph{Globally seeded inference library.} Setting the seed of the tensor library once, at the start
 of a run, ties every subsequent draw, including the initialisation of each Gaussian-process fit, to the
