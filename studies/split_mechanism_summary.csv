@@ -1,0 +1,10 @@
+# split-allocation mechanism test; B=500/time, 500 times, 20 seeds; wall=24024s
+observable,allocation,noise,rmse,bias2,variance,bias_share_pct,mean_lengthscale,amplitude_ratio
+XI,1x500,empirical,0.01557,3.48e-05,0.0002076,14.4,2.1453,1.021
+XI,1x500,fitted,0.01533,1.49e-05,0.00022,6.4,2.0013,1.031
+XI,5x100,empirical,0.02581,0.0004889,0.0001773,73.4,1.6253,1.0201
+XI,5x100,fitted,0.0135,1.98e-05,0.0001623,10.9,1.5787,1.0283
+ZZ,1x500,empirical,0.02884,0.0002753,0.0005565,33.1,1.5612,1.0385
+ZZ,1x500,fitted,0.02449,4.04e-05,0.0005592,6.7,1.4401,1.0415
+ZZ,5x100,empirical,0.05045,0.002084,0.0004617,81.9,1.2343,1.0413
+ZZ,5x100,fitted,0.02166,6.43e-05,0.000405,13.7,1.1735,1.0254
