@@ -35,6 +35,12 @@ for ax, obs, tt in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle 
                     label=lab if lab else None)
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xticks(B); ax.set_xticklabels(B); ax.minorticks_off()
+    # a log axis spanning less than a decade labels only one tick by default; label the
+    # values actually covered so the reader can read an RMSE off the axis
+    lo, hi = ax.get_ylim()
+    ticks = [t for t in (0.006, 0.008, 0.01, 0.02, 0.03, 0.05, 0.08) if lo <= t <= hi]
+    ax.set_yticks(ticks)
+    ax.set_yticklabels([f"{t:g}" for t in ticks])
     ax.set_xlabel("budget per time, $B$")
     ax.set_title(tt); ax.grid(alpha=.25, which="both")
 axes[0].set_ylabel("RMSE")
