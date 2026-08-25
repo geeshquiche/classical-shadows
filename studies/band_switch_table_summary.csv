@@ -1,0 +1,4 @@
+# Table 1 GP row under latent vs predictive bands; identical data path to routes3_final MODE=table (100 times, 200 shadows, seeds 10..29, fixed-basis, matched-count, empirical noise); wall=2240s
+observable,n_seeds,rmse_mean,rmse_se,cov_latent_mean,cov_latent_se,cov_pred_mean,cov_pred_se,width_latent,width_pred
+XI,20,0.0365,0.0015,0.98,0.0049,1.0,0.0,0.1631,0.3989
+ZZ,20,0.0716,0.0041,0.9385,0.0137,0.999,0.001,0.2657,0.6959
