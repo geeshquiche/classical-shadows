@@ -83,8 +83,11 @@ def fig_recon():
     ax.legend(fontsize=9.5, ncol=2, loc="lower left")
     ax.grid(alpha=0.25)
     fig.tight_layout()
-    fig.savefig(_OUT +"reconstruction_band.png", dpi=150); fig.savefig(_OUT +"reconstruction_band.pdf")
-    fig.savefig(_OUT +"/reconstruction_band.png", dpi=150); fig.savefig(_OUT +"/reconstruction_band.pdf")
+    # SUPERSEDED: Figure 1 of the report is the two-panel version from recon_band_final.py.
+    # This single-panel draft must not be written to reconstruction_band.* or it silently
+    # replaces the figure the report's caption describes.
+    fig.savefig(_OUT +"reconstruction_band_singlepanel_draft.png", dpi=150)
+    fig.savefig(_OUT +"reconstruction_band_singlepanel_draft.pdf")
     print("recon fig done")
 
 

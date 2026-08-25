@@ -181,8 +181,10 @@ for i, (rt, col, lab) in enumerate([("matrix","#5dade2","GP regression"),
     se = [data[(n, rt)].std(ddof=1) / np.sqrt(len(data[(n, rt)])) for n in names]
     ax.bar(x + (i - 0.5) * w, m, w, yerr=se, capsize=3, color=col, edgecolor="k", lw=.5, label=lab)
 ns = {n: len(data[(n,"matrix")]) for n in names}
+uniform = len(set(ns.values())) == 1   # every setting now carries the same seed count
 ax.set_xticks(x)
-ax.set_xticklabels([f"{pretty(n)}\n({ns[n]} seeds)" for n in names], fontsize=9)
+ax.set_xticklabels([pretty(n) if uniform else f"{pretty(n)}\n({ns[n]} seeds)" for n in names],
+                   fontsize=9.5)
 ax.set_ylabel(r"RMSE of $\langle X_0\rangle(t)$")
 ax.legend(fontsize=9)
 ax.grid(axis="y", alpha=.25)

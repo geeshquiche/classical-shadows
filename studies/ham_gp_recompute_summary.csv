@@ -1,10 +1,10 @@
-# 8-Hamiltonian sweep, GP arm recomputed under final method (matched-count, empirical noise, Matern-3/2), paired vs stored conditional arm (identical data per cell via make_cell_seed); <XI>, 100x200; wall=652s
+# 8-Hamiltonian sweep, GP arm recomputed under final method (matched-count, empirical noise, Matern-3/2), paired vs stored conditional arm (identical data per cell via make_cell_seed); <XI>, 100x200; wall=3005s
 hamiltonian,n_seeds,gp_mean,gp_se,cond_mean,cond_se,paired_diff,paired_se,gp_wins
-ZZ_slow,5,0.03143,0.00315,0.154,0.03223,-0.12258,0.03054,5
-ZZ_fast,5,0.04863,0.00228,0.27947,0.02657,-0.23084,0.02492,5
-ZZ_plus_XI,5,0.04128,0.00273,0.11704,0.01043,-0.07576,0.00862,5
-weak,15,0.01782,0.00127,0.06673,0.00875,-0.0489,0.00836,15
-entangling,5,0.03612,0.00328,0.14331,0.01511,-0.10719,0.0124,5
-TFIM,5,0.03853,0.00206,0.16331,0.0039,-0.12479,0.00519,5
-beating,5,0.03744,0.00293,0.14038,0.01044,-0.10294,0.00892,5
-dephasing,5,0.03394,0.00224,0.10739,0.00491,-0.07345,0.00534,5
+ZZ_slow,20,0.02815,0.00141,0.10768,0.01327,-0.07953,0.01308,20
+ZZ_fast,20,0.0482,0.00124,0.23566,0.01187,-0.18746,0.01168,20
+ZZ_plus_XI,20,0.04018,0.00218,0.13072,0.00743,-0.09054,0.00711,20
+weak,20,0.01763,0.00113,0.06876,0.00899,-0.05113,0.00904,20
+entangling,20,0.0337,0.00188,0.10642,0.00946,-0.07272,0.00926,20
+TFIM,20,0.0381,0.00159,0.16424,0.00364,-0.12614,0.00394,20
+beating,20,0.0366,0.00165,0.13107,0.00517,-0.09447,0.00544,20
+dephasing,20,0.03079,0.00163,0.11757,0.00369,-0.08677,0.00479,20

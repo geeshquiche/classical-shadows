@@ -56,8 +56,10 @@ for ax, ((i, j), part, lab) in zip(axes.ravel(), sel):
     ax.plot(target, f(pred[:, i, j]),"-", color="#2471a3", lw=2, label="GP reconstruction")
     ax.set_title(lab, fontsize=14); ax.grid(alpha=.25)
 for ax in axes[1]: ax.set_xlabel(r"time $t$ (units of $1/J$)")
-axes[0, 0].legend(loc="upper right", framealpha=.9)
-fig.tight_layout()
+# a legend inside any panel covers data: all four are full across the whole window
+h, l = axes[0, 0].get_legend_handles_labels()
+fig.legend(h, l, loc="lower center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 0.005))
+fig.tight_layout(rect=(0, 0.065, 1, 1))
 for ext in ("pdf","png"): fig.savefig(_os.path.join(_OUT, f"element_grid.{ext}"), dpi=150)
 
 M = np.zeros((4, 4))
