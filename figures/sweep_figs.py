@@ -69,8 +69,15 @@ for ax, obs, tt in zip(axes2, ["XI","ZZ"], [r"$\langle X_0\rangle$", r"$\langle 
     ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xticks(xs); ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=9.5); ax.minorticks_off()
     ax.set_title(tt); ax.grid(alpha=.25, which="both")
 axes2[0].set_ylabel("RMSE")
-fig2.subplots_adjust(bottom=0.30)
-axes2[0].legend(fontsize=9.5, ncol=3, loc="upper center", bbox_to_anchor=(1.08, -0.20), frameon=False)
-fig2.supxlabel(r"sampling density (observed times $\times$ shadows)", fontsize=11)
-fig2.tight_layout(rect=(0, 0.10, 1, 1)); fig2.savefig(_OUT +"smoothers_ladder.pdf"); fig2.savefig(_OUT +"smoothers_ladder.png", dpi=150)
+for ax in axes2:
+    lo, hi = ax.get_ylim()
+    ticks = [t for t in (0.03, 0.05, 0.08, 0.1, 0.2, 0.3, 0.5) if lo <= t <= hi]
+    ax.set_yticks(ticks); ax.set_yticklabels([f"{t:g}" for t in ticks])
+# the legend must be a FIGURE legend: an axes legend anchored outside its axes is pulled into the
+# tight bounding box at save time, which stretches the canvas and shrinks the panels
+h2, l2 = axes2[0].get_legend_handles_labels()
+fig2.subplots_adjust(left=0.10, right=0.985, top=0.93, bottom=0.34, wspace=0.26)
+fig2.legend(h2, l2, fontsize=9.5, ncol=3, loc="lower center", frameon=False, bbox_to_anchor=(0.5, 0.005))
+fig2.supxlabel(r"sampling density (observed times $\times$ shadows)", fontsize=11, y=0.10)
+fig2.savefig(_OUT +"smoothers_ladder.pdf"); fig2.savefig(_OUT +"smoothers_ladder.png", dpi=150)
 print("budget_sweep + smoothers_ladder figures done")

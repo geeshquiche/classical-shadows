@@ -39,7 +39,7 @@ np.random.seed(cell)
 mdf = generate_rerandomised_measurement_df(states, tlist, observed, 2, SHADOWS,
                                            shots_per_setting=1, seed=cell)
 
-fig, axes = plt.subplots(1, 2, figsize=(6.7, 3.1), sharex=True)
+fig, axes = plt.subplots(1, 2, figsize=(6.7, 2.8), sharex=True)
 for ax, obs, lab in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"]):
     truth = exact_curve(states, tlist, OPS[obs], target)
     obs_times, series = per_time_series(mdf, SUPPORTS[obs])
@@ -51,7 +51,7 @@ for ax, obs, lab in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle
     ax.plot(target, truth, "k-", lw=1.6, label="exact")
     ax.plot(target, mean, "-", color="#2471a3", lw=1.8, label="reconstruction")
     ax.fill_between(target, mean - band, mean + band, color="#2471a3", alpha=.18, label="95% band")
-    ax.set_xlabel("time"); ax.set_ylabel(lab); ax.grid(alpha=.25)
+    ax.set_xlabel(r"time $t$ (units of $1/J$)"); ax.set_ylabel(lab); ax.grid(alpha=.25)
     rmse = float(np.sqrt(np.mean((mean - truth) ** 2)))
     print(f"  {obs}: RMSE {rmse:.4f}, coverage {float(np.mean(np.abs(mean-truth) <= band)):.3f}")
 axes[0].legend(fontsize=9.5, ncol=2, loc="lower left")

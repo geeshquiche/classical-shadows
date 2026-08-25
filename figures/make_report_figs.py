@@ -77,7 +77,7 @@ def fig_recon():
     ax.plot(ot, est,"o", ms=3.5, color="#e59866", alpha=0.8, label="shadow estimates")
     ax.plot(tg, mean,"-", color="#2471a3", lw=1.8, label="GP reconstruction")
     ax.fill_between(tg, mean - band, mean + band, color="#2471a3", alpha=0.18, label="95% band")
-    ax.set_xlabel("time $t$")
+    ax.set_xlabel(r"time $t$ (units of $1/J$)")
     ax.set_ylabel(r"$\langle X_0\rangle$")
     ax.set_title("Reconstructing a single-observable trajectory with uncertainty (2-qubit TFIM)", fontsize=10)
     ax.legend(fontsize=9.5, ncol=2, loc="lower left")

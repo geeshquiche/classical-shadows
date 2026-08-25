@@ -25,13 +25,13 @@ def fig_empnoise():
     se = [0.0004, 0.0005, 0.0004, 0.0004, 0.0007, 0.0007, 0.0005]
     colors = ["#27ae60","#cd6155","#2c3e50","#7f8c8d","#cd6155","#cd6155","#cd6155"]
     y = np.arange(len(names))[::-1]
-    fig, ax = plt.subplots(figsize=(6.7, 4.0))
+    fig, ax = plt.subplots(figsize=(6.7, 3.2))
     ax.axvline(0.0333, ls="--", color="#2c3e50", lw=1.1, alpha=.8, zorder=0)
     ax.errorbar(rmse, y, xerr=se, fmt="none", ecolor="k", elinewidth=1.1, capsize=3, zorder=1)
     ax.scatter(rmse, y, s=70, c=colors, edgecolor="k", linewidth=.6, zorder=2)
     ax.set_yticks(y); ax.set_yticklabels(names, fontsize=9.5)
     ax.set_xlabel(r"Frobenius error of $\rho(t)$")
-    ax.text(0.0333, y[0] + 0.55,"shared baseline", fontsize=9.5, color="#2c3e50", ha="center")
+    ax.text(0.0333, y[0] + 0.42,"shared baseline", fontsize=9, color="#2c3e50", ha="center")
     ax.set_ylim(y[-1] - 0.8, y[0] + 0.9)
     ax.grid(axis="x", alpha=.25)
     fig.tight_layout()

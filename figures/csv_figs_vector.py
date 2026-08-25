@@ -85,7 +85,7 @@ save(fig,"route_robustness")
 RA = _STUDIES
 rows = load(RA +"rho_final_nqubit_summary.csv")
 by = {(r["qubits"], r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
-fig, ax = plt.subplots(figsize=(6.7, 3.8))
+fig, ax = plt.subplots(figsize=(6.7, 3.0))
 x = np.arange(2); w = 0.27
 for i, (k, lab, c) in enumerate([("shared","shared","#2c3e50"),
                                  ("per-elem","fully fitted per-element","#c0392b"),
@@ -103,7 +103,7 @@ save(fig,"nqubit_scaling")
 # ---- 2x2 de-confound: interaction plot (rho_final_program MODE=core, 20 seeds) ----
 rows = load(_STUDIES +"rho_final_core_summary.csv")
 by = {r["arm"]: (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
-fig, ax = plt.subplots(figsize=(6.7, 3.9))
+fig, ax = plt.subplots(figsize=(6.7, 3.1))
 xpos = [0, 1]
 for arms, lab, c, mk in [(("shared","shared-empnoise"), r"shared $\ell$","#2c3e50","o"),
                          (("per-elem","empnoise"), r"per-element $\ell$","#27ae60","s")]:
@@ -142,7 +142,7 @@ save(fig,"budget_comparison")
 rows = load(RA +"rho_final_shots_summary.csv")
 N = np.array(sorted({float(r["N"]) for r in rows}))
 by = {(float(r["N"]), r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
-fig, ax = plt.subplots(figsize=(6.7, 3.9))
+fig, ax = plt.subplots(figsize=(6.7, 3.1))
 styles = {"shared": ("#2c3e50","shared"),"per-elem": ("#c0392b","fully fitted per-element"),
 "empnoise": ("#27ae60","per-element, empirical noise")}
 for k, (c, lab) in styles.items():
@@ -174,7 +174,7 @@ for n in names:
                     if r["hamiltonian"] == n}.items())
         data[(n, rt)] = np.array([x[1] for x in v])
 x = np.arange(len(names)); w = 0.38
-fig, ax = plt.subplots(figsize=(6.7, 3.6))
+fig, ax = plt.subplots(figsize=(6.7, 3.2))
 for i, (rt, col, lab) in enumerate([("matrix","#5dade2","GP regression"),
                                     ("conditional","#e59866","conditional (autoregressive classifier)")]):
     m = [data[(n, rt)].mean() for n in names]
@@ -199,7 +199,7 @@ HAMS = [("ZZ_slow", 0.5 * ZZ, []), ("ZZ_fast", 2.5 * ZZ, []), ("ZZ_plus_XI", ZZ 
         ("beating", 0.4 * ZI + 0.6 * IZ + 0.3 * ZZ, []), ("dephasing", 0.5 * ZZ, [np.sqrt(0.3) * ZI])]
 plus = (qt.basis(2, 0) + qt.basis(2, 1)).unit(); psi0 = qt.tensor(plus, plus)
 tl = np.linspace(0, 2 * np.pi, 300)
-fig, axes = plt.subplots(2, 4, figsize=(6.7, 3.8), sharex=True, sharey=True)
+fig, axes = plt.subplots(2, 4, figsize=(6.7, 3.1), sharex=True, sharey=True)
 for ax, (nm, H, c) in zip(axes.ravel(), HAMS):
     y = np.real(np.asarray(qt.expect(XI, qt.mesolve(H, psi0, tl, c).states)))
     ax.plot(tl, y, color="#2471a3", lw=1.5)
@@ -208,7 +208,7 @@ for ax, (nm, H, c) in zip(axes.ravel(), HAMS):
 for ax in axes.ravel():
     ax.tick_params(labelsize=8.5)
     ax.set_xticks([0, 3, 6])
-fig.supxlabel("time", fontsize=11)
+fig.supxlabel(r"time $t$ (units of $1/J$)", fontsize=11)
 fig.supylabel(r"$\langle X_0\rangle$", fontsize=11)
 fig.tight_layout()
 save(fig,"hamiltonian_dynamics")

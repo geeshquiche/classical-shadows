@@ -55,7 +55,7 @@ for ax, ((i, j), part, lab) in zip(axes.ravel(), sel):
     ax.plot(target, f(truth[:, i, j]),"k-", lw=2, label="exact")
     ax.plot(target, f(pred[:, i, j]),"-", color="#2471a3", lw=2, label="GP reconstruction")
     ax.set_title(lab, fontsize=14); ax.grid(alpha=.25)
-for ax in axes[1]: ax.set_xlabel("time $t$")
+for ax in axes[1]: ax.set_xlabel(r"time $t$ (units of $1/J$)")
 axes[0, 0].legend(loc="upper right", framealpha=.9)
 fig.tight_layout()
 for ext in ("pdf","png"): fig.savefig(_os.path.join(_OUT, f"element_grid.{ext}"), dpi=150)
