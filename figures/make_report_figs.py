@@ -80,7 +80,7 @@ def fig_recon():
     ax.set_xlabel("time $t$")
     ax.set_ylabel(r"$\langle X_0\rangle$")
     ax.set_title("Reconstructing a single-observable trajectory with uncertainty (2-qubit TFIM)", fontsize=10)
-    ax.legend(fontsize=8, ncol=2, loc="lower left")
+    ax.legend(fontsize=9.5, ncol=2, loc="lower left")
     ax.grid(alpha=0.25)
     fig.tight_layout()
     fig.savefig(_OUT +"reconstruction_band.png", dpi=150); fig.savefig(_OUT +"reconstruction_band.pdf")

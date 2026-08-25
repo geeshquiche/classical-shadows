@@ -60,11 +60,11 @@ for ax, obs, tt in zip(axes2, ["XI","ZZ"], [r"$\langle X_0\rangle$", r"$\langle 
         y = [float(next(r for r in rows if r["observable"] == obs and int(r["times"]) == t and int(r["shadows"]) == s and r["method"] == m)["rmse_mean"]) for t, s in dens]
         se = [float(next(r for r in rows if r["observable"] == obs and int(r["times"]) == t and int(r["shadows"]) == s and r["method"] == m)["rmse_se"]) for t, s in dens]
         ax.errorbar(xs, y, yerr=se, color=c, ls=ls, marker=mk, ms=4.5, lw=1.6, capsize=2, label=lab.replace("--","–"))
-    ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xticks(xs); ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=8.5); ax.minorticks_off()
+    ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xticks(xs); ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=9.5); ax.minorticks_off()
     ax.set_title(tt); ax.grid(alpha=.25, which="both")
 axes2[0].set_ylabel("RMSE")
 fig2.subplots_adjust(bottom=0.30)
-axes2[0].legend(fontsize=8.5, ncol=3, loc="upper center", bbox_to_anchor=(1.08, -0.20), frameon=False)
+axes2[0].legend(fontsize=9.5, ncol=3, loc="upper center", bbox_to_anchor=(1.08, -0.20), frameon=False)
 fig2.supxlabel(r"sampling density (observed times $\times$ shadows)", fontsize=11)
 fig2.tight_layout(rect=(0, 0.10, 1, 1)); fig2.savefig(_OUT +"smoothers_ladder.pdf"); fig2.savefig(_OUT +"smoothers_ladder.png", dpi=150)
 print("budget_sweep + smoothers_ladder figures done")

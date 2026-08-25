@@ -54,7 +54,7 @@ for ax, obs, lab in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle
     ax.set_xlabel("time"); ax.set_ylabel(lab); ax.grid(alpha=.25)
     rmse = float(np.sqrt(np.mean((mean - truth) ** 2)))
     print(f"  {obs}: RMSE {rmse:.4f}, coverage {float(np.mean(np.abs(mean-truth) <= band)):.3f}")
-axes[0].legend(fontsize=8.5, ncol=2, loc="lower left")
+axes[0].legend(fontsize=9.5, ncol=2, loc="lower left")
 fig.tight_layout()
 for ext in ("pdf", "png"):
     fig.savefig(_os.path.join(_OUT, f"reconstruction_band.{ext}"))
