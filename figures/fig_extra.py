@@ -19,19 +19,28 @@ OUT = _OUT
 
 def fig_empnoise():
     # forest plot: per-element variants against the shared baseline (20 seeds)
-    names = ["per-element,\nempirical noise", "per-element,\nbounded", "shared", "grouped",
-             "per-element,\nrestarts", "per-element,\ngrid search", "per-element,\nfully fitted"]
-    rmse = [0.0303, 0.0327, 0.0333, 0.0337, 0.0364, 0.0373, 0.0377]
-    se = [0.0004, 0.0005, 0.0004, 0.0004, 0.0007, 0.0007, 0.0005]
+    # read from the ledger: hardcoded numbers would silently go stale if MODE=variants is re-run
+    import csv as _csv
+    _rows = {r["arm"]: (float(r["frob_mean"]), float(r["frob_se"]))
+             for r in _csv.DictReader(l for l in open(_STUDIES + "rho_final_variants_summary.csv")
+                                      if not l.startswith("#"))}
+    _arms = [("empnoise", "per-element,\nempirical noise"), ("bounded", "per-element,\nbounded"),
+             ("shared", "shared"), ("grouped", "grouped"), ("restart", "per-element,\nrestarts"),
+             ("grid", "per-element,\ngrid search"), ("per-elem", "per-element,\nfully fitted")]
+    _arms.sort(key=lambda a: _rows[a[0]][0])
+    names = [lab for _, lab in _arms]
+    rmse = [_rows[k][0] for k, _ in _arms]
+    se = [_rows[k][1] for k, _ in _arms]
+    baseline = _rows["shared"][0]
     colors = ["#27ae60","#cd6155","#2c3e50","#7f8c8d","#cd6155","#cd6155","#cd6155"]
     y = np.arange(len(names))[::-1]
     fig, ax = plt.subplots(figsize=(6.7, 3.2))
-    ax.axvline(0.0333, ls="--", color="#2c3e50", lw=1.1, alpha=.8, zorder=0)
+    ax.axvline(baseline, ls="--", color="#2c3e50", lw=1.1, alpha=.8, zorder=0)
     ax.errorbar(rmse, y, xerr=se, fmt="none", ecolor="k", elinewidth=1.1, capsize=3, zorder=1)
     ax.scatter(rmse, y, s=70, c=colors, edgecolor="k", linewidth=.6, zorder=2)
     ax.set_yticks(y); ax.set_yticklabels(names, fontsize=9.5)
     ax.set_xlabel(r"Frobenius error of $\rho(t)$")
-    ax.text(0.0333, y[0] + 0.42,"shared baseline", fontsize=9, color="#2c3e50", ha="center")
+    ax.text(baseline, y[0] + 0.42,"shared baseline", fontsize=9, color="#2c3e50", ha="center")
     ax.set_ylim(y[-1] - 0.8, y[0] + 0.9)
     ax.grid(axis="x", alpha=.25)
     fig.tight_layout()

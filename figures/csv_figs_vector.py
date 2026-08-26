@@ -107,8 +107,10 @@ rows = load(_STUDIES +"rho_final_core_summary.csv")
 by = {r["arm"]: (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
 fig, ax = plt.subplots(figsize=(6.7, 3.1))
 xpos = [0, 1]
+# NB each line joins two different arms of the study, so it must not borrow an arm colour used in
+# the neighbouring figures (per-elem is red there, empnoise green)
 for arms, lab, c, mk in [(("shared","shared-empnoise"), r"shared $\ell$","#2c3e50","o"),
-                         (("per-elem","empnoise"), r"per-element $\ell$","#27ae60","s")]:
+                         (("per-elem","empnoise"), r"per-element $\ell$","#8e44ad","s")]:
     m = [by[a][0] for a in arms]; e = [by[a][1] for a in arms]
     ax.errorbar(xpos, m, yerr=e, marker=mk, ms=9, lw=1.8, capsize=4, color=c, label=lab)
 ax.set_xticks(xpos)
@@ -179,7 +181,7 @@ for n in names:
         data[(n, rt)] = np.array([x[1] for x in v])
 x = np.arange(len(names)); w = 0.38
 fig, ax = plt.subplots(figsize=(6.7, 3.2))
-for i, (rt, col, lab) in enumerate([("matrix","#5dade2","GP regression"),
+for i, (rt, col, lab) in enumerate([("matrix","#2471a3","GP regression"),
                                     ("conditional","#e59866","conditional (autoregressive classifier)")]):
     m = [data[(n, rt)].mean() for n in names]
     se = [data[(n, rt)].std(ddof=1) / np.sqrt(len(data[(n, rt)])) for n in names]

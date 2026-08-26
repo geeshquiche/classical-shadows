@@ -1,0 +1,6 @@
+# aleatoric/epistemic decomposition by resampling, final method (fresh bases, matched-count, empirical noise, Matern-3/2); 20 datasets per configuration; wall=362s
+times,shadows,observable,n_seeds,aleatoric_mean,epistemic_mean,total_mean,aleatoric_share_pct,epistemic_share_pct,sq_bias_mean
+20,60,XI,20,0.056516,0.01365,0.070165,80.5,19.5,0.001995
+20,60,ZZ,20,0.173963,0.044188,0.218151,79.7,20.3,0.007337
+100,200,XI,20,0.011947,0.001558,0.013505,88.5,11.5,0.000276
+100,200,ZZ,20,0.035651,0.003565,0.039216,90.9,9.1,0.000696
