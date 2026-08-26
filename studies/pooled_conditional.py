@@ -51,30 +51,48 @@ def pooled_training_data(mdf, qubit, shadow_ids):
 
 
 def sample_estimates(bank_lookup, mdf, n, shadow_ids, target, obs_string, resamples, rng):
-    """Sample outcomes per shadow from its classifier and form the matched-count estimate."""
-    pat = basis_pattern(mdf, n)
+    """Sample outcomes per shadow from its classifier and form the matched-count estimate.
+
+    Qubit q is conditioned on the outcomes already drawn for qubits <q AT THE SAME TIME, as the
+    chain-rule factorisation requires.  Conditioning on a single time's draw for the whole trajectory
+    destroys the correlation the route exists to capture and collapses correlator estimates toward zero.
+    """
     tab = (mdf[["shadow_id","qubit","pauli"]].drop_duplicates(subset=["shadow_id","qubit"])
            .pivot(index="shadow_id", columns="qubit", values="pauli"))
+    T = len(target)
     cache = {}
+    def curve(q, s, pattern):
+        key = (q, bank_lookup(q, s), pattern)
+        if key not in cache:
+            cache[key] = np.asarray(predict_conditional_gp_curve(
+                bank_lookup(q, s, entry=True), t_values=target, previous_outcomes=list(pattern)),
+                dtype=float)
+        return cache[key]
+
     out = []
     for _r in range(resamples):
-        shots_by_t = [[] for _ in range(len(target))]
+        shots_by_t = [[] for _ in range(T)]
         for s in shadow_ids:
-            prev = []
-            cols = [[] for _ in range(len(target))]
+            # draws[q][i] = outcome of qubit q at time i, conditioned on qubits <q at time i
+            draws = np.zeros((n, T), dtype=int)
             for q in range(n):
-                key = (q, bank_lookup(q, s), tuple(prev))
-                if key not in cache:
-                    cache[key] = predict_conditional_gp_curve(
-                        bank_lookup(q, s, entry=True), t_values=target, previous_outcomes=list(prev))
-                curve = cache[key]
-                # one draw per time, conditioned on this shadow's own previous-qubit draws
-                draws = [1 if rng.random() < float(curve[i]) else -1 for i in range(len(target))]
-                prev.append(draws[0])
-                for i in range(len(target)):
-                    cols[i].append([tab.loc[s, q], draws[i]])
-            for i in range(len(target)):
-                shots_by_t[i].append(cols[i])
+                if q == 0:
+                    c = curve(0, s, ())
+                    draws[0] = np.where(np.array([rng.random() for _ in range(T)]) < c, 1, -1)
+                else:
+                    # the conditioning pattern varies with time, so evaluate every pattern the
+                    # previous qubits actually took and select per time point
+                    patterns = {}
+                    for i in range(T):
+                        pat = tuple(int(draws[j][i]) for j in range(q))
+                        if pat not in patterns:
+                            patterns[pat] = curve(q, s, pat)
+                    u = np.array([rng.random() for _ in range(T)])
+                    for i in range(T):
+                        pat = tuple(int(draws[j][i]) for j in range(q))
+                        draws[q][i] = 1 if u[i] < patterns[pat][i] else -1
+            for i in range(T):
+                shots_by_t[i].append([[tab.loc[s, q], int(draws[q][i])] for q in range(n)])
         out.append([matched_pauli_string_estimate_from_shots(sh, obs_string) for sh in shots_by_t])
     return np.asarray(out, dtype=float)
 
