@@ -1,0 +1,8 @@
+# conditional capacity/resample sweep vs raw and GP on identical data; 8 seeds; wall=19715s
+arm,rmse_mean,rmse_se
+raw,0.14642,0.00637
+gp,0.06932,0.00508
+cond_i40_it80_r20,0.20472,0.0047
+cond_i40_it80_r100,0.19991,0.00462
+cond_i80_it320_r20,0.17006,0.00504
+cond_i80_it320_r100,0.16535,0.00544
