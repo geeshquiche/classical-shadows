@@ -77,7 +77,8 @@ for ax in axes2:
 # tight bounding box at save time, which stretches the canvas and shrinks the panels
 h2, l2 = axes2[0].get_legend_handles_labels()
 fig2.subplots_adjust(left=0.10, right=0.985, top=0.93, bottom=0.34, wspace=0.26)
-fig2.legend(h2, l2, fontsize=9.5, ncol=3, loc="lower center", frameon=False, bbox_to_anchor=(0.5, 0.005))
+fig2.legend(h2, l2, fontsize=8.8, ncol=3, loc="lower center", frameon=False,
+            bbox_to_anchor=(0.5, 0.005), columnspacing=1.0, handlelength=1.8, handletextpad=0.5)
 fig2.supxlabel(r"sampling density (observed times $\times$ shadows)", fontsize=11, y=0.10)
-fig2.savefig(_OUT +"smoothers_ladder.pdf"); fig2.savefig(_OUT +"smoothers_ladder.png", dpi=150)
+report_style.save_exact(fig2, [_OUT +"smoothers_ladder.pdf", _OUT +"smoothers_ladder.png"])
 print("budget_sweep + smoothers_ladder figures done")

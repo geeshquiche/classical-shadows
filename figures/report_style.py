@@ -34,3 +34,22 @@ def wide(height=3.5):
 def half(height=3.4):
     # size for a figure spanning about two thirds of the column
     return (0.72 * TEXTWIDTH, height)
+
+
+def save_exact(fig, paths, dpi=150):
+    # Save at exactly the declared figsize.
+    #
+    # savefig.bbox is "tight" for most figures, which trims whitespace -- but "tight" also EXPANDS the
+    # canvas to include anything that spills past the axes margins (a wide figure legend, a long y-axis
+    # label).  A figure that comes out wider than the text column is then scaled down by
+    # \includegraphics and every label in it shrinks by the same factor.  For figures with figure-level
+    # legends the width must be pinned instead, and the margins set by subplots_adjust must be roomy
+    # enough that nothing is clipped.
+    import matplotlib.pyplot as _plt
+    prev = _plt.rcParams["savefig.bbox"]
+    _plt.rcParams["savefig.bbox"] = "standard"
+    try:
+        for path in ([paths] if isinstance(paths, str) else paths):
+            fig.savefig(path, dpi=dpi)
+    finally:
+        _plt.rcParams["savefig.bbox"] = prev

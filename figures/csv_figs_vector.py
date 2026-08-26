@@ -76,10 +76,12 @@ for ax, (obs, fname, tt) in zip(axes, [("XI","routes3_robustness_XI.csv", r"$\la
     ax.set_title(tt); ax.grid(alpha=.25)
     ax.set_xticks([40, 120, 240])
 axes[0].set_ylabel("RMSE")
-axes[0].legend(loc="upper right")
-fig.supxlabel("shadows per observed time (budget)", fontsize=11)
-fig.tight_layout(rect=(0, 0.04, 1, 1))
-save(fig,"route_robustness")
+# all three curves descend across the panel, so any in-axes legend covers data
+h, l = axes[0].get_legend_handles_labels()
+fig.legend(h, l, fontsize=9.5, ncol=3, loc="lower center", frameon=False, bbox_to_anchor=(0.5, 0.0))
+fig.subplots_adjust(left=0.105, right=0.985, top=0.92, bottom=0.28, wspace=0.26)
+fig.supxlabel("shadows per observed time (budget)", fontsize=11, y=0.125)
+report_style.save_exact(fig, [_OUT + "route_robustness.pdf", _OUT + "route_robustness.png"])
 
 # ---- n-qubit scaling (matched-Pauli program, 2026-08-21) ----
 RA = _STUDIES
@@ -157,7 +159,9 @@ ax.set_yticks(_yt); ax.set_yticklabels([f"{v:g}" for v in _yt])
 ax.set_xlabel("shadows per observed time, $N$")
 ax.set_ylabel(r"Frobenius error of $\rho(t)$")
 ax.grid(alpha=0.25, which="both")
-ax.legend(fontsize=9.5)
+# the curves descend across the whole panel and pass behind an upper-right legend; the empty
+# region is below them at small N
+ax.legend(fontsize=9.5, loc="lower left")
 fig.tight_layout()
 save(fig,"shot_scaling")
 

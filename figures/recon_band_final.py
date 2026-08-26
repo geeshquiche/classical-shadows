@@ -39,7 +39,7 @@ np.random.seed(cell)
 mdf = generate_rerandomised_measurement_df(states, tlist, observed, 2, SHADOWS,
                                            shots_per_setting=1, seed=cell)
 
-fig, axes = plt.subplots(1, 2, figsize=(6.7, 2.8), sharex=True)
+fig, axes = plt.subplots(1, 2, figsize=(6.7, 3.0), sharex=True)
 for ax, obs, lab in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"]):
     truth = exact_curve(states, tlist, OPS[obs], target)
     obs_times, series = per_time_series(mdf, SUPPORTS[obs])
@@ -54,8 +54,11 @@ for ax, obs, lab in zip(axes, ["XI", "ZZ"], [r"$\langle X_0\rangle$", r"$\langle
     ax.set_xlabel(r"time $t$ (units of $1/J$)"); ax.set_ylabel(lab); ax.grid(alpha=.25)
     rmse = float(np.sqrt(np.mean((mean - truth) ** 2)))
     print(f"  {obs}: RMSE {rmse:.4f}, coverage {float(np.mean(np.abs(mean-truth) <= band)):.3f}")
-axes[0].legend(fontsize=9.5, ncol=2, loc="lower left")
-fig.tight_layout()
-for ext in ("pdf", "png"):
-    fig.savefig(_os.path.join(_OUT, f"reconstruction_band.{ext}"))
+# a four-entry legend does not fit inside either panel without covering data or spilling
+# past the axes, so it goes underneath as a figure legend
+h, l = axes[0].get_legend_handles_labels()
+fig.legend(h, l, fontsize=8.6, ncol=4, loc="lower center", frameon=False,
+           bbox_to_anchor=(0.5, 0.0), columnspacing=1.0, handlelength=1.7, handletextpad=0.5)
+fig.subplots_adjust(left=0.115, right=0.985, top=0.97, bottom=0.30, wspace=0.38)
+report_style.save_exact(fig, [_os.path.join(_OUT, f"reconstruction_band.{ext}") for ext in ("pdf", "png")])
 print("reconstruction_band done (both observables, pipeline)")

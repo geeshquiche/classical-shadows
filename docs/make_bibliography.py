@@ -88,14 +88,39 @@ def fmt(key, f):
     return f"\\bibitem{{{key}}} " + ", ".join(parts) + "."
 
 
+def citation_order():
+    """Keys in order of first citation, submission first then anything only the working copy cites.
+
+    A numbered reference list should count upward as the reader meets the references; ordering by
+    refs.bib file order instead makes the introduction open on [28, 29, 30].
+    """
+    import re, sys
+    sys.path.insert(0, str(HERE))
+    from count_words import strip_cut
+    seen = []
+    for src, transform in (("report_main.tex", strip_cut), ("report_main.tex", lambda x: x)):
+        text = transform((HERE / src).read_text())
+        for m in re.finditer(r"\\cite\{([^}]+)\}", text):
+            for k in (x.strip() for x in m.group(1).split(",")):
+                if k and k not in seen:
+                    seen.append(k)
+    return seen
+
+
 def main():
     entries = parse_bib((HERE / "refs.bib").read_text())
+    by_key = dict(entries)
+    order = citation_order()
+    ordered = [(k, by_key[k]) for k in order if k in by_key]
+    missing = [(k, f) for k, f in entries if k not in order]      # in refs.bib but never cited
     lines = ["% generated from refs.bib by make_bibliography.py -- do not edit by hand",
+             "% entries are numbered in order of first citation",
              "\\begin{thebibliography}{99}"]
-    lines += [fmt(k, f) for k, f in entries]
+    lines += [fmt(k, f) for k, f in ordered + missing]
     lines.append("\\end{thebibliography}")
     (HERE / "bibliography.tex").write_text("\n".join(lines) + "\n")
-    print(f"bibliography: {len(entries)} entries")
+    print(f"bibliography: {len(ordered)} cited entries in citation order"
+          + (f", {len(missing)} uncited appended" if missing else ""))
 
 
 if __name__ == "__main__":
