@@ -43,7 +43,7 @@ for tag in TAGS:
 X = np.arange(len(TAGS))
 LABELS = [t.replace("x", "\n$\\times$") for t in TAGS]
 
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.7, 3.5))
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.7, 3.15))
 for prot, norm, c, ls, mk, lab in ARMS:
     cov = [data[(t, prot, norm)][0] for t in TAGS]
     cse = [data[(t, prot, norm)][1] for t in TAGS]

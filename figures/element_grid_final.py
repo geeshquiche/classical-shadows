@@ -48,7 +48,7 @@ for (i, j), part, ys, mu, sd, alpha in ch:
 plt.rcParams.update({"font.size": 13,"axes.labelsize": 13,"legend.fontsize": 12})
 sel = [((0, 0),"real", r"$\rho_{00}$ (population)"), ((0, 1),"real", r"$\mathrm{Re}\,\rho_{01}$"),
        ((0, 1),"imag", r"$\mathrm{Im}\,\rho_{01}$"), ((0, 3),"real", r"$\mathrm{Re}\,\rho_{03}$")]
-fig, axes = plt.subplots(2, 2, figsize=(6.7, 5.0), sharex=True)
+fig, axes = plt.subplots(2, 2, figsize=(6.7, 4.2), sharex=True)
 for ax, ((i, j), part, lab) in zip(axes.ravel(), sel):
     f = (lambda z: z.real) if part =="real" else (lambda z: z.imag)
     ax.plot(tlist[obs_idx], f(mean[:, i, j]),".", ms=3, color="#e59866", alpha=.6, label="raw shadow estimate")
