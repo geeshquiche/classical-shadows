@@ -33,6 +33,10 @@ SEEDS = [10,11] if QUICK else list(range(10, 10+int(os.environ.get("NSEED","6"))
 TRUE_T, PRED_T = 400, 100
 INDUCING, ITERS, RESAMPLES = (20, 40, 4) if QUICK else (40, 80, 20)
 OBSERVABLES = os.environ.get("OBS","XI,ZZ").split(",")
+# ARMS=pooled skips the expensive per-shadow bank (400 models) when only the pooled arm is wanted;
+# the per-shadow numbers at 20 seeds already exist in routes3_table_summary.csv
+ARMS = os.environ.get("ARMS", "both")
+TAG = os.environ.get("TAG", "")
 
 
 def basis_pattern(mdf, n):
@@ -120,15 +124,16 @@ def main():
             res = {"raw": raw, "gp": gpm}
 
             # --- variant A: one classifier per (qubit, shadow_id), as in the report ---
-            bankA = {q: {} for q in range(2)}
-            for q in range(2):
+            if ARMS != "pooled":
+              bankA = {q: {} for q in range(2)}
+              for q in range(2):
                 for s in sids:
                     x, yy = build_conditional_training_data(mdf, q, s)
                     m, lk = train_gp_classifier(x, yy, num_inducing=min(INDUCING, len(yy)),
                                                 training_iter=ITERS, lr=0.05, kernel="matern32")
                     m.eval(); lk.eval(); bankA[q][s] = {"model": m, "likelihood": lk}
-            lookA = lambda q, s, entry=False: bankA[q][s] if entry else s
-            res["per-shadow"] = np.nanmean(
+              lookA = lambda q, s, entry=False: bankA[q][s] if entry else s
+              res["per-shadow"] = np.nanmean(
                 sample_estimates(lookA, mdf, 2, sids, target, obs, RESAMPLES, rng), axis=0)
 
             # --- variant B: one classifier per (qubit, basis pattern), pooled ---
@@ -167,7 +172,7 @@ def main():
     hdr=(f"# conditional route: per-shadow vs basis-pooled classifiers, identical data; "
          f"{NT} times x {NS} shadows, {len(SEEDS)} seeds, inducing={INDUCING}, iters={ITERS}, "
          f"resamples={RESAMPLES}; wall={wall:.0f}s")
-    for fn,data in [("pooled_conditional.csv",rows),("pooled_conditional_summary.csv",summ)]:
+    for fn,data in [(f"pooled_conditional{TAG}.csv",rows),(f"pooled_conditional{TAG}_summary.csv",summ)]:
         with open(os.path.join(_HERE,fn),"w",newline="") as f:
             w=csv.DictWriter(f,fieldnames=list(data[0].keys())); f.write(hdr+"\n"); w.writeheader(); w.writerows(data)
     print(f"\nwall={wall:.0f}s -> saved pooled_conditional{{,_summary}}.csv", flush=True)

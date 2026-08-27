@@ -1,0 +1,10 @@
+# conditional route: per-shadow vs basis-pooled classifiers, identical data; 100 times x 200 shadows, 6 seeds, inducing=40, iters=80, resamples=20; wall=1494s
+observable,arm,n_seeds,rmse_mean,rmse_se
+XI,raw,6,0.0773,0.00149
+XI,gp,6,0.0342,0.00197
+XI,per-shadow,6,0.15321,0.00229
+XI,pooled,6,0.04406,0.00154
+ZZ,raw,6,0.14592,0.00769
+ZZ,gp,6,0.0759,0.00981
+ZZ,per-shadow,6,0.19933,0.00439
+ZZ,pooled,6,0.08206,0.0048
