@@ -56,11 +56,17 @@ def texcount(path: Path) -> dict:
             nums["captions"] = int(m.group(1))
         elif m := re.match(r"\s+(\d+)\+(\d+)\+(\d+) \(.*Section: Layperson", line):
             nums["layperson"] = int(m.group(1)) + int(m.group(2)) + int(m.group(3))
+        elif m := re.match(r"\s+(\d+)\+(\d+)\+(\d+) \(.*Section: Acknowledg", line):
+            # the guidance excludes the acknowledgements as well as the layperson summary
+            nums["ack"] = int(m.group(1)) + int(m.group(2)) + int(m.group(3))
     return nums
 
 
 def official(n: dict) -> int:
-    return n["text"] + n["headers"] + n["captions"] - n.get("layperson", 0)
+    # counted = text + headers + captions, MINUS the layperson's summary and the acknowledgements
+    # (both excluded by FinalReportGuidance); the bibliography is not counted by texcount here
+    return (n["text"] + n["headers"] + n["captions"]
+            - n.get("layperson", 0) - n.get("ack", 0))
 
 
 def main():
