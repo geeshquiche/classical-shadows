@@ -1,9 +1,17 @@
-# band construction comparison; 20 seeds; wall=1909s
+# band construction comparison; 20 seeds; wall=698s
 times,shadows,observable,band,coverage_mean,coverage_se,width_mean
 20,60,XI,latent,0.945,0.014,0.56199
 20,60,XI,predictive,0.991,0.0046,0.90689
 20,60,ZZ,latent,0.897,0.0489,0.87046
 20,60,ZZ,predictive,0.9965,0.0024,1.64624
+40,100,XI,latent,0.9615,0.0094,0.33466
+40,100,XI,predictive,1.0,0.0,0.63631
+40,100,ZZ,latent,0.9415,0.0153,0.52378
+40,100,ZZ,predictive,1.0,0.0,1.11717
+60,150,XI,latent,0.9715,0.009,0.23341
+60,150,XI,predictive,1.0,0.0,0.49435
+60,150,ZZ,latent,0.946,0.0146,0.36883
+60,150,ZZ,predictive,1.0,0.0,0.85445
 100,200,XI,latent,0.9635,0.0101,0.1671
 100,200,XI,predictive,1.0,0.0,0.40727
 100,200,ZZ,latent,0.9575,0.0085,0.26398
