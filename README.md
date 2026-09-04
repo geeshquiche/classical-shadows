@@ -92,9 +92,9 @@ The exactly simulated dynamics is used only to sample measurement outcomes and t
 ## Provenance
 
 The codebase was developed jointly with Fred Xu over the course of the project. The analysis, figures and
-studies presented in the accompanying report were produced by the author. The supervisors provided
-methodological direction, including the matrix-element Gaussian-process route suggested by
-Prof. Roberto Bondesan.
+studies presented in the accompanying report were produced by the author. Prof. Florian Mintert and
+Prof. Roberto Bondesan provided methodological direction, including the matrix-element Gaussian-process
+route suggested by Prof. Bondesan.
 
 ### A note on `studies/pooled_conditional.py`
 
@@ -104,7 +104,7 @@ across shadows that share a basis assignment. It was run at one budget and a red
 part of the report's results**. It is included because it is the natural next step for the conditional
 route, not as evidence for or against it. Its summary CSV is deliberately not distributed.
 
-**AI assistance:** substantial portions of this codebase and its documentation were developed with the
-assistance of Claude (Anthropic), working under the author's direction; experimental designs, results and
-conclusions were specified, checked and verified by the author, and every reported number can be
-regenerated from the scripts in this repository.
+**AI assistance:** generative artificial intelligence tools were used in the development of substantial
+portions of this codebase and its documentation, working under the author's direction; experimental
+designs, results and conclusions were specified, checked and verified by the author, and every reported
+number can be regenerated from the scripts in this repository.
