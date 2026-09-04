@@ -16,14 +16,19 @@ coverage rather than assumed.
 
 - **A calibrated reconstruction method.** Gaussian-process regression on matched-count shadow estimates
   with the observation noise supplied from the measured snapshot scatter halves the raw estimator's error
-  on both a local observable and a two-body correlator, with 95% bands that never under-cover at any
+  on both a local observable and a two-body correlator, with 95% predictive bands that never under-cover at any
   sampling density tested (`studies/final_headline_recon.py`, `studies/final_config_coverage.py`).
 - **A route comparison.** Against a generative Bayesian model of the joint measurement-outcome
-  distribution (the conditional/autoregressive classifier route), the regression is the most accurate route in
-  every comparison — 20 paired seeds, three budgets, four qubits, and all eight Hamiltonians of a dynamics
-  library on all 160 individual paired seeds — at a small fraction of the cost. Quadrupling the conditional
-  route's capacity and quintupling its resampling closes only 5% of the gap for a local observable and 19%
-  for the correlator, leaving it worse than even the raw estimator: the deficit is structural
+  distribution (the conditional/autoregressive classifier route), the regression is the most accurate route
+  under the estimator configuration developed here — 20 paired seeds for the route table, 15 across three
+  budgets, 10 for the four-qubit check, and all eight Hamiltonians of a dynamics library on all 160
+  individual paired seeds — at a small fraction of the cost. Quadrupling the conditional route's capacity
+  and quintupling its resampling improves its own error by 4.7 +/- 3.0% for a local observable and
+  19.2 +/- 7.0% for the correlator, so **capacity is not the binding constraint**; how the classifiers are
+  fitted may be. Shadows sharing a basis assignment are exchangeable and could be pooled, a refinement not
+  pursued here and left for future work. The comparison should therefore be read as cost-aware and specific
+  to the tested configurations, against a reasonably configured but untuned baseline, rather than an
+  absolute ranking of the route families
   (`studies/routes3_final.py`, `studies/ham_gp_recompute.py`, `estimator_comparison/`).
 - **The noise finding.** Fitting the observation noise by marginal likelihood under-estimates it; supplying
   the physically known noise instead is what makes the bands calibrated, improves full-state
@@ -38,7 +43,7 @@ coverage rather than assumed.
 | Document / folder | What it is |
 |---|---|
 | **[`docs/seeding_and_reproducibility.pdf`](docs/seeding_and_reproducibility.pdf)** | Companion document: how randomness is assigned across experiments, the audits applied to the pipeline, the experimental-design rationale, and the implementation details of the final estimator. The report's Section 3 and its evaluation protocol summarise this document; read it first. (`.tex` source alongside.) |
-| `studies/` | The final-method studies reported in the MRes report: eleven scripts, each with the summary CSV of its results next to it (see the table below). |
+| `studies/` | The final-method studies reported in the MRes report: 21 scripts, most with the summary CSV of their results next to them (the principal ones are tabulated below). |
 | `estimator_comparison/` | Earlier studies whose results the report still uses: the 8-Hamiltonian sweep (conditional arm), the conditional-route capacity sweep, the nested-vs-independent seeding demonstration, the element-grid and lengthscale-map figures, and the fitted-vs-analytic noise check. |
 | `figures/` | Scripts that turn the CSVs into the report's figures (`csv_figs_vector.py` for most, plus four smaller ones). Outputs go to `figures/out/`. |
 | `per_element_rho/` | Per-element ρ(t) fitting variants (shared / per-element / empirical-noise) and the locality study. |
@@ -51,7 +56,7 @@ coverage rather than assumed.
 | Script | Produces | Report |
 |---|---|---|
 | `final_headline_recon.py` | raw vs GP reconstruction, coverage, classical-smoother baselines | §4.1, §6 |
-| `final_config_coverage.py` | sensitivity ladder: 16 design arms × 5 sampling densities | §4.1 (ladder figure) |
+| `final_config_coverage.py` | sensitivity ladder: 16 design arms × 6 sampling densities | §4.1 (ladder figure) |
 | `routes3_final.py` | three-route comparison: table, budget robustness, 4-qubit check | §4.5 (Table 1, figures) |
 | `ham_gp_recompute.py` | GP arm of the 8-Hamiltonian sweep, paired with the stored conditional arm | §4.5 |
 | `rho_final_program.py` | ρ(t) program: 2×2 de-confound, shot scaling, n-qubit, variants ladder | §4.6, §4.2 |
@@ -86,8 +91,18 @@ The exactly simulated dynamics is used only to sample measurement outcomes and t
 
 ## Provenance
 
-Developed within a two-person MRes project; the measurement-simulation and classifier-route utilities
-build on code shared within the project team.
+The codebase was developed jointly with Fred Xu over the course of the project. The analysis, figures and
+studies presented in the accompanying report were produced by the author. The supervisors provided
+methodological direction, including the matrix-element Gaussian-process route suggested by
+Prof. Roberto Bondesan.
+
+### A note on `studies/pooled_conditional.py`
+
+That script is a **preliminary, single-configuration test** of pooling the conditional route's classifiers
+across shadows that share a basis assignment. It was run at one budget and a reduced seed count, was
+**not validated to the seeding and pairing standard applied to every result in the report**, and is **not
+part of the report's results**. It is included because it is the natural next step for the conditional
+route, not as evidence for or against it. Its summary CSV is deliberately not distributed.
 
 **AI assistance:** substantial portions of this codebase and its documentation were developed with the
 assistance of Claude (Anthropic), working under the author's direction; experimental designs, results and

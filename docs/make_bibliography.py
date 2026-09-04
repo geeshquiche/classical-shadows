@@ -67,10 +67,61 @@ def unwrap(t):
     return t
 
 
+_PARTICLES = {"de", "van", "von", "der", "den", "del", "di", "da", "la", "le"}
+
+
+def _split_and(s):
+    """Split a BibTeX author list on ' and ' at brace depth 0."""
+    out, depth, cur, i = [], 0, "", 0
+    while i < len(s):
+        depth += (s[i] == "{") - (s[i] == "}")
+        if depth == 0 and s[i:i + 5] == " and ":
+            out.append(cur.strip()); cur = ""; i += 5; continue
+        cur += s[i]; i += 1
+    if cur.strip():
+        out.append(cur.strip())
+    return out
+
+
+def _first_glyph(tok):
+    """First printable letter, keeping accent constructs intact ({\\'E}, \\'E, \\c{c})."""
+    m = re.match(r"^(\{\\[^}]*\}|\\[a-zA-Z]+\{[^}]*\}|\\[^a-zA-Z]\{?[A-Za-z]\}?|.)", tok)
+    return m.group(1) if m else tok[:1]
+
+
+def _initial(tok):
+    if tok.lower().strip(".") in _PARTICLES:
+        return tok
+    if tok.endswith(".") and len(tok.strip(".")) <= 2:
+        return tok                                   # already an initial
+    if "-" in tok:                                   # Hsin-Yuan -> H.-Y.
+        return "-".join(_first_glyph(p) + "." for p in tok.split("-") if p)
+    return _first_glyph(tok) + "."
+
+
+def fmt_authors(raw):
+    """'Last, First and Last, First' -> 'F. Last, F. Last and F. Last'.
+
+    BibTeX separates authors with ' and '; passing that through renders every name joined by a
+    literal 'and', which is not a bibliography style.  Names are given as initials-then-surname so
+    commas are unambiguous as separators.
+    """
+    out = []
+    for nm in _split_and(raw):
+        if "," in nm:
+            last, given = nm.split(",", 1)
+            out.append((" ".join(_initial(t) for t in given.split()) + " " + last.strip()).strip())
+        else:
+            out.append(nm)
+    if len(out) == 1:
+        return out[0]
+    return ", ".join(out[:-1]) + " and " + out[-1]
+
+
 def fmt(key, f):
     parts = []
     if "author" in f:
-        parts.append(unwrap(f["author"]))
+        parts.append(fmt_authors(unwrap(f["author"])))
     if "title" in f:
         parts.append(f"\\emph{{{unwrap(f['title'])}}}")
     for k in ("journal", "booktitle", "howpublished", "school", "publisher"):
