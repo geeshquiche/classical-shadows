@@ -43,7 +43,7 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PARENT = os.path.dirname(_HERE)
-_FF = os.path.join(_PARENT, "for_fred_latest")
+_FF = os.path.join(_PARENT, "per_element_rho")
 for _p in (_PARENT, _FF):
     if _p not in sys.path:
         sys.path.append(_p)

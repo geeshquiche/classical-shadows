@@ -9,9 +9,9 @@
 # there, so it shows more figures and thousands more words than will be handed in.  Review the
 # submission file.
 cd "$(dirname "$0")"
-export TEXMFVAR=/Users/vzs/MLBD/tools/texmf-var
+export TEXMFVAR="${TEXMFVAR:-${TMPDIR:-/tmp}/texmf-var}"
 PDFLATEX=/Library/TeX/texbin/pdflatex
-PY=/Users/vzs/miniconda3/envs/MLBDproj/bin/python
+PY="${PY:-python3}"
 
 "$PY" count_words.py --write | tail -2
 if [ refs.bib -nt bibliography.tex ]; then
