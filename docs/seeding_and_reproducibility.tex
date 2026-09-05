@@ -104,7 +104,7 @@ below.
 
 
 \section{Experimental design considerations}
-These design considerations are summarised in one paragraph of the report (its Section~4); the full
+These design considerations are summarised in one paragraph of the report (its Section~3.1); the full
 rationale is recorded here.
 
 \paragraph{Budget-matched comparison.} Every comparison between routes or strategies is made at a fixed
@@ -125,7 +125,7 @@ fitted hyperparameter: fitting it by marginal likelihood systematically under-es
 dataset sizes used (central ratio $0.68$ of the analytic value over twenty seeds), which both narrows the
 uncertainty bands and lets the posterior mean chase shot noise. When few snapshots align, the raw sample
 variance of the binary outcome products is frequently zero, which would tell the regression those points
-are noise-free, so the Laplace-smoothed variance estimate of Section~4 keeps the noise input well defined.
+are noise-free, so the Laplace-smoothed variance estimate of the implementation notes above keeps the noise input well defined.
 
 \paragraph{The smoothness prior.} A Gaussian-process prior that is too strong flattens real structure: a
 lengthscale chosen too long averages across a genuine oscillation and shrinks its amplitude, reporting a
