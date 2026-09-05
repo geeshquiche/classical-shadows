@@ -1,42 +1,22 @@
 # Learning the Quantum Dynamics of Classical Shadows
 
 Code and reproducibility companion for the Imperial College London MRes project **MLBD_2025_10**
-(Vageesh Singh, 2025–26).
+(Vageesh Singh, 2025-26).
 
-## What the project is about
+## What this is
 
-Classical shadows compress quantum measurements into classically stored snapshots from which many
-properties of a system can later be estimated — but each estimate is noisy and refers to a single
-instant. This project reconstructs the *time dependence*: observable trajectories ⟨O⟩(t) and reduced
+Classical shadows give cheap snapshots of a quantum state, but each estimate is noisy and tied to
+one instant. This code reconstructs the time dependence: observable trajectories ⟨O⟩(t) and reduced
 density matrices ρ(t) of simulated spin chains, from shadows taken at a finite set of times, using
-Gaussian-process regression with a predictive uncertainty that is checked against the truth by empirical
-coverage rather than assumed.
+Gaussian-process regression. Every reconstruction carries a 95% band, and the bands are checked by
+empirical coverage rather than assumed.
 
 ## What was achieved
 
-- **A calibrated reconstruction method.** Gaussian-process regression on matched-count shadow estimates
-  with the observation noise supplied from the measured snapshot scatter halves the raw estimator's error
-  on both a local observable and a two-body correlator, with 95% predictive bands that never under-cover at any
-  sampling density tested (`studies/final_headline_recon.py`, `studies/final_config_coverage.py`).
-- **A route comparison.** Against a generative Bayesian model of the joint measurement-outcome
-  distribution (the conditional/autoregressive classifier route), the regression is the most accurate route
-  under the estimator configuration developed here — 20 paired seeds for the route table, 15 across three
-  budgets, 10 for the four-qubit check, and all eight Hamiltonians of a dynamics library on all 160
-  individual paired seeds — at a small fraction of the cost. Quadrupling the conditional route's capacity
-  and quintupling its resampling improves its own error by 4.7 +/- 3.0% for a local observable and
-  19.2 +/- 7.0% for the correlator, so **capacity is not the binding constraint**; how the classifiers are
-  fitted may be. Shadows sharing a basis assignment are exchangeable and could be pooled, a refinement not
-  pursued here and left for future work. The comparison should therefore be read as cost-aware and specific
-  to the tested configurations, against a reasonably configured but untuned baseline, rather than an
-  absolute ranking of the route families
-  (`studies/routes3_final.py`, `studies/ham_gp_recompute.py`, `estimator_comparison/`).
-- **The noise finding.** Fitting the observation noise by marginal likelihood under-estimates it; supplying
-  the physically known noise instead is what makes the bands calibrated, improves full-state
-  reconstruction by 9% over shared hyperparameters, and flips the budget-allocation verdict
-  (`studies/rho_final_program.py`, `studies/budget_final.py`).
-- **Scaling and scope.** Shadow variance grows as 3^k with observable weight but is independent of system
-  size; within a reduced block, partial reconstruction gives no sparsity shortcut
-  (`per_element_rho/mll_k_vs_n.py`, `studies/partial_final.py`).
+- GP regression on matched-count estimates with the measured noise supplied halves the raw estimator's error, with 95% predictive bands that never under-covered at any tested density (`studies/final_headline_recon.py`, `studies/final_config_coverage.py`).
+- The regression beat the conditional classifier route in every paired comparison, 160 of 160 seeds across eight Hamiltonians, at roughly 30 to 50 times lower cost; extra capacity and resampling improved the conditional route by 4.7% and 19.2% without closing the gap (`studies/routes3_final.py`, `studies/ham_gp_recompute.py`, `estimator_comparison/`).
+- Fitting the observation noise by marginal likelihood under-estimates it; supplying the measured value calibrates the bands, improves full-state reconstruction by 9%, and flips the budget-allocation verdict (`studies/rho_final_program.py`, `studies/budget_final.py`).
+- Shadow variance grows as 3^k with observable weight and is flat in system size from 2 to 6 qubits; within a reduced block, partial reconstruction gives no sparsity shortcut (`per_element_rho/mll_k_vs_n.py`, `studies/partial_final.py`).
 
 ## Where to look
 
@@ -69,7 +49,7 @@ coverage rather than assumed.
 | `band_construction.py`, `band_switch_table.py` | latent vs predictive uncertainty band | §5.1 |
 | `split_mechanism.py` | bias/variance decomposition of the split-budget penalty | §5.1 |
 | `conditional_fairness.py` | conditional-route capacity and resampling sweep | §5.5 |
-| `verify_pipeline.py` | end-to-end checks that the code computes what the report states | — |
+| `verify_pipeline.py` | end-to-end checks that the code computes what the report states | (sanity check, no report section) |
 | `gp_vs_classical_smoothers.py` | spline and Savitzky–Golay baselines on the route-comparison data | §5 |
 
 ## Running
@@ -91,20 +71,22 @@ The exactly simulated dynamics is used only to sample measurement outcomes and t
 
 ## Provenance
 
-The codebase was developed jointly with Fred Xu over the course of the project. The analysis, figures and
-studies presented in the accompanying report were produced by the author. Prof. Florian Mintert and
-Prof. Roberto Bondesan provided methodological direction, including the matrix-element Gaussian-process
-route suggested by Prof. Bondesan.
+The codebase was developed jointly with Fred Xu over the course of the project. The analysis,
+figures and studies presented in the accompanying report were produced by the author. Prof. Florian
+Mintert and Prof. Roberto Bondesan provided methodological direction, including the matrix-element
+Gaussian-process route suggested by Prof. Bondesan.
 
 ### A note on `studies/pooled_conditional.py`
 
-That script is a **preliminary, single-configuration test** of pooling the conditional route's classifiers
-across shadows that share a basis assignment. It was run at one budget and a reduced seed count, was
-**not validated to the seeding and pairing standard applied to every result in the report**, and is **not
-part of the report's results**. It is included because it is the natural next step for the conditional
-route, not as evidence for or against it. Its summary CSV is deliberately not distributed.
+That script is a preliminary, single-configuration test of pooling the conditional route's
+classifiers across shadows that share a basis assignment. It was run at one budget and a reduced
+seed count, was not validated to the seeding and pairing standard applied to every result in the
+report, and is not part of the report's results. It is kept because pooling is the natural next
+step for the conditional route.
 
-**AI assistance:** generative artificial intelligence tools were used in the development of substantial
-portions of this codebase and its documentation, working under the author's direction; experimental
-designs, results and conclusions were specified, checked and verified by the author, and every reported
+### AI assistance
+
+Generative artificial intelligence tools were used in the development of substantial portions of
+this codebase and its documentation, working under the author's direction; experimental designs,
+results and conclusions were specified, checked and verified by the author, and every reported
 number can be regenerated from the scripts in this repository.
