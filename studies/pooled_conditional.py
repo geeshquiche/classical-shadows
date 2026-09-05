@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Does the conditional route lose because of the method, or because of how it is fitted?
+"""Preliminary single-configuration test of pooling the conditional route's classifiers.
+
+Run at one budget and a reduced seed count; not validated to the seeding and pairing standard
+applied to the results in the report, and not part of the report's results. Kept because pooling
+shadows that share a basis assignment is the natural next step for the conditional route.
+
+Question: does the conditional route lose because of the method, or because of how it is fitted?
 
 The implementation used in the report trains one GP classifier per (qubit, shadow_id).  Under the
 fixed-basis protocol each shadow has ONE basis, so each classifier sees exactly one binary outcome per

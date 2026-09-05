@@ -21,7 +21,7 @@ OUT = _OUT
 
 
 def fig_route():
-    # Values = 20-seed means/SEs of Table tab:routes (routes3_table_summary.csv, 2026-08-21,
+    # Values = 20-seed means/SEs of Table tab:routes (routes3_table_summary.csv,
     # final matched-count estimator; marginal route binned to a cautionary note).
     xm=[0.082,0.037,0.158]; xe=[0.002,0.002,0.002]
     zm=[0.153,0.072,0.205]; ze=[0.005,0.004,0.003]

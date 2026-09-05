@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Three-route comparison under the consistent (matched-count) estimator, house seed counts.
 
-Routes (independent-marginal binned per 2026-08-20 decision):
+Routes (the independent-marginal simplification is omitted; see report Section 2.3):
   raw          : matched-count per-time estimates, linear interpolation
   gp           : final-method GP (matched-count series, smoothed SE, empirical noise, Matern-3/2)
   conditional  : autoregressive classifier route (mechanics unchanged), with its internal
@@ -11,7 +11,7 @@ Protocol: FIXED bases per shot index (the conditional route requires it; the mat
 normalisation makes raw/gp insensitive to the frozen draw). All routes see identical data per
 seed. Errors are reported absolute and RELATIVE to the true signal scale,
 rRMSE = RMSE / sqrt(mean(truth^2)), so fractions compare consistently across observables and
-studies (Vageesh's convention, 2026-08-21).
+studies.
 
 Modes (env MODE):
   table       (default): 2q TFIM, 100x200, seeds 10..29 (20), XI + ZZ      -> Table 1

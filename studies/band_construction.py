@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Why is empirical coverage 1.00 rather than 0.95, and can the band be tightened honestly?
+"""Why is empirical coverage 1.00 rather than 0.95, and can the band be tightened?
 
 The band currently used is z*sqrt(Var[f] + se^2): the GP's posterior variance of the LATENT
 function plus the observation-noise variance. But the quantity the band is checked against is the

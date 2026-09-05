@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Why does splitting a fixed budget hurt under measured noise?
 
-Supervisor hypothesis (meeting, 2026-08-24): the split arm "applies the noise term twice", once
-per replica and again when combining, inflating the noise estimate.
+One candidate mechanism: the split arm "applies the noise term twice", once per replica and again
+when combining, inflating the noise estimate.
 
 Alternative mechanism: no noise is added at combination. Each replica has B/k shots, so its measured
 per-point noise is ~sqrt(k) larger, so its GP smooths harder; every replica is over-smoothed in the

@@ -15,7 +15,7 @@ Arms (2x2 de-confound): {noise: fitted, fixed-empirical} x {lengthscale: shared,
 RBF kernel, mirroring the house mll pipeline (fits imported from mll_shot_scaling).
 
 Errors: mean Frobenius distance to exact rho(t), absolute AND relative to the truth's mean
-Frobenius norm (consistent-fractions convention, 2026-08-21).
+Frobenius norm (consistent-fractions convention).
 
 Modes (env MODE):
   core   (default): 2q TFIM full rho, 500 times x 500 shadows, 20 seeds, all 4 arms
@@ -206,7 +206,7 @@ def fit_shared_empnoise(to, tn, ch, n):
 
 
 def _variants_fitters():
-    """Variant-ladder arms, mirroring for_fred_latest/mll_per_element_variants.py definitions."""
+    """Variant-ladder arms, mirroring the per-element variant-ladder definitions."""
     sys.path.append(_FF)
     from mll_per_element_variants import (fit_per_element as v_pe, fit_per_element_grid,
                                           fit_grouped)

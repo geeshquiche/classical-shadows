@@ -83,7 +83,7 @@ fig.subplots_adjust(left=0.105, right=0.985, top=0.92, bottom=0.28, wspace=0.26)
 fig.supxlabel("shadows per observed time (budget)", fontsize=11, y=0.125)
 report_style.save_exact(fig, [_OUT + "route_robustness.pdf", _OUT + "route_robustness.png"])
 
-# ---- n-qubit scaling (matched-Pauli program, 2026-08-21) ----
+# ---- n-qubit scaling (matched-Pauli program) ----
 RA = _STUDIES
 rows = load(RA +"rho_final_nqubit_summary.csv")
 by = {(r["qubits"], r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
@@ -122,7 +122,7 @@ ax.grid(alpha=.25)
 fig.tight_layout()
 save(fig,"twobytwo")
 
-# ---- budget comparison (matched-count estimator rerun, 2026-08-21) ----
+# ---- budget comparison (matched-count estimator) ----
 rows = load(RA +"budget_final_summary.csv")
 fig, axes = plt.subplots(1, 2, figsize=(6.7, 3.4))
 for ax, obs, tt in zip(axes, ["XI","ZZ"], [r"$\langle X_0\rangle$", r"$\langle Z_0Z_1\rangle$"]):
@@ -142,7 +142,7 @@ axes[0].legend(fontsize=9.5)
 fig.tight_layout()
 save(fig,"budget_comparison")
 
-# ---- shot scaling (matched-Pauli program, 10 seeds, 2026-08-21) ----
+# ---- shot scaling (matched-Pauli program, 10 seeds) ----
 rows = load(RA +"rho_final_shots_summary.csv")
 N = np.array(sorted({float(r["N"]) for r in rows}))
 by = {(float(r["N"]), r["arm"]): (float(r["frob_mean"]), float(r["frob_se"])) for r in rows}
